@@ -1,0 +1,244 @@
+BẢN ĐỒ FILE OPENWORLD CHO NGƯỜI MỚI
+Ngày đối chiếu: 15/11/2026
+Mọi đường dẫn bên dưới tính từ D:\AIagent _openworld\OpenWorld-main.
+Chỉ bao gồm dự án OpenWorld. Không liệt kê file cache được tạo khi chạy.
+
+CÁCH DÙNG
+Đọc HOC_AI_VA_THUC_HANH_OPENWORLD.txt trước để có kiến thức nền.
+File này là mục lục tra cứu: đường dẫn | nhiệm vụ bằng ngôn ngữ đơn giản.
+Các mô tả dựa trên cấu trúc, tiêu đề, docstring và mã chính đã đối chiếu;
+không phải kiểm toán từng dòng hoặc chứng nhận mọi chức năng đã chạy.
+
+NÊN MỞ TRƯỚC, THEO THỨ TỰ
+1) docs/vi/README.md: tổng quan tiếng Việt.
+2) docs/vi/GLOSSARY.md: giải nghĩa từ lạ.
+3) examples/r0_agent_cycle.py: kịch bản Alice và Bob.
+4) src/openworld_superkernel/r0_cycle.py: cách nối các bước agent.
+5) docs/ROADMAP.md: việc ưu tiên hiện tại và các bước tương lai.
+6) tests/test_r0_agent_cycle.py: các tình huống dùng để kiểm tra vòng agent.
+
+A. FILE Ở GỐC VÀ CẤU HÌNH LÀM VIỆC
+
+README.md | Giới thiệu dự án, trạng thái và các lệnh chạy chính.
+AGENTS.md | Hướng dẫn cho trợ lý AI khi hỗ trợ lập trình; không tự chạy agent.
+CONTRIBUTING.md | Quy trình đề xuất, kiểm tra và đóng góp thay đổi.
+SECURITY.md | Chính sách/phạm vi liên quan đến bảo mật và báo cáo vấn đề.
+LICENSE | Điều kiện bản quyền và sử dụng mã nguồn.
+pyproject.toml | Khai báo gói Python, phiên bản và cấu hình đóng gói.
+.gitignore | Quy định file nào Git bỏ qua, ví dụ cache hoặc file phát sinh.
+.github/PULL_REQUEST_TEMPLATE.md | Mẫu mô tả một đề nghị thay đổi mã nguồn.
+.github/ISSUE_TEMPLATE/engineering-task.md | Mẫu ghi công việc kỹ thuật.
+.github/ISSUE_TEMPLATE/research-task.md | Mẫu ghi câu hỏi/thí nghiệm nghiên cứu.
+.github/workflows/python-package.yml | Cấu hình kiểm tra tự động Python trên GitHub.
+.github/workflows/w5-postgres-parity-manual.yml | Quy trình chạy thủ công bài kiểm tra lưu trữ PostgreSQL.
+
+B. EXAMPLES: KỊCH BẢN MINH HỌA CÓ THỂ CHẠY
+
+examples/r0_agent_cycle.py | Tạo Alice/Bob, cấp quyền thử nghiệm, chạy ba vòng và in dự đoán/hành động/replay.
+examples/world/demo.py | Tạo thế giới nhỏ, mô phỏng tín hiệu theo bước, đo thời gian và kiểm tra replay; đổi được --agents/--ticks/--seed.
+examples/populations/local_three_groups.py | Minh họa trao đổi giữa ba nhóm agent cùng chủ trong một thế giới cục bộ.
+examples/composable_world.py | Bài thử độc lập về ghép các quá trình/luật thế giới có kiểu dữ liệu rõ ràng.
+
+C. SRC: CÁC BỘ PHẬN TRIỂN KHAI
+Các file trong nhóm này thường được import bởi demo/test, không cần chạy
+từng file một. Tên các thành phần lớn không có nghĩa chúng đã sẵn sàng vận hành.
+
+src/openworld_superkernel/__init__.py | Đánh dấu package và đưa một số kiểu/giao diện ra để file khác import.
+src/openworld_superkernel/r0_cycle.py | Nối quan sát -> bộ nhớ -> quyết định -> quyền -> mô phỏng -> lưu -> replay.
+src/openworld_superkernel/world_fixture.py | Định nghĩa agent, trạng thái, hành động, luật chuyển trạng thái và phát lại thế giới W3.
+src/openworld_superkernel/world_guard.py | Cổng kiểm tra capability trước khi đọc hoặc thay đổi thế giới thử nghiệm.
+src/openworld_superkernel/hyper_memory_p1e.py | Bộ nhớ SQLite: nhật ký sự kiện chính xác và thống kê dự đoán phản hồi 0/1.
+src/openworld_superkernel/memory_contracts.py | Kiểu dữ liệu sự kiện, nhãn nguồn gốc và quy tắc chọn cách xử lý bộ nhớ.
+src/openworld_superkernel/trust_boundaries.py | Các cơ chế thử nghiệm về quyền có phạm vi và kiểm tra nguồn gốc/bằng chứng.
+src/openworld_superkernel/math_kernel.py | Các phép toán/mô hình xác suất hữu hạn chạy CPU; không gọi LLM.
+src/openworld_superkernel/online_ensemble.py | Kết hợp nhiều bộ dự đoán bằng trọng số cập nhật từ sai số.
+src/openworld_superkernel/hyper_memory_ensemble.py | Tùy chọn ghép bộ dự đoán ensemble vào giao dịch SQLite của bộ nhớ thử nghiệm.
+src/openworld_superkernel/memory_representation_study.py | Các cách biểu diễn bộ nhớ dự đoán để so sánh trong bài nghiên cứu riêng.
+src/openworld_superkernel/population_repr.py | Tóm tắt phân bố quần thể và blueprint/genome có kiểu; genome không tự tạo trí thông minh hay quyền.
+src/openworld_superkernel/population_links.py | Định nghĩa nhóm và điều phối trao đổi giữa các nhóm cùng chủ qua cổng quyền.
+src/openworld_superkernel/risk_budget.py | Tính mức rủi ro/tài nguyên đang có thể mất khi agent cho đi và chờ phản hồi.
+src/openworld_superkernel/institution_proposals.py | Tạo/đánh giá đề xuất điều lệ tổ chức; không tự cấp quyền hoặc thi hành đề xuất.
+src/openworld_superkernel/world_persistence.py | Lưu checkpoint và đầu vào thế giới vào SQLite để dựng lại bằng replay.
+src/openworld_superkernel/transactional_world.py | Thí nghiệm ghi đồng thuận/chuyển tài nguyên trong một cơ sở dữ liệu nguyên tử.
+src/openworld_superkernel/postgres_control_plane.py | Biến thể lưu trữ PostgreSQL tùy chọn cho bài thử giao dịch; không cần cho demo nhập môn.
+src/openworld_superkernel/protocol_revocation.py | Lưu trạng thái thu hồi quyền qua các phiên chạy trong bài thử cục bộ.
+src/openworld_superkernel/durable_identity.py | Tham chiếu thử nghiệm về phiên xác thực và quyền bền vững trong tiến trình tin cậy.
+src/openworld_superkernel/anti_rollback.py | Thử phát hiện cơ sở dữ liệu quyền bị đưa về bản cũ bằng witness; witness trong RAM chỉ là mô hình kiểm tra.
+src/openworld_superkernel/witness_recovery.py | Đánh giá chỉ đọc tình trạng witness/khôi phục; không tự khôi phục hiệu lực quyền.
+
+D. BENCHMARKS: CÁC BÀI THÍ NGHIỆM ĐO ĐẠC
+Benchmark khác demo: cần chạy nhiều cấu hình và so sánh phương pháp. P1..P6
+là tên các bài nghiên cứu; W0..W5 là nhánh trách nhiệm, R0..R4 là lộ trình.
+Không đọc ba loại mã số này như cùng một dãy phiên bản sản phẩm.
+
+benchmarks/p1_population_learning.py | Học chọn hành động từ phản hồi ở quần thể tổng hợp, policy dùng chung theo vai trò.
+benchmarks/p2_stateful_cooperation.py | Học hợp tác với phản hồi trễ trong thế giới W3 mà hành động làm đổi trạng thái.
+benchmarks/p3_mutual_learning_w3.py | Thử cả bên cho và bên nhận có policy cập nhật riêng qua nhiều vòng.
+benchmarks/p4_sample_efficiency.py | Đo cần bao nhiêu trải nghiệm để học và điều gì xảy ra khi đối tác thay đổi.
+benchmarks/p5_risk_aware.py | Thử giới hạn thăm dò và lựa chọn không hành động khi rủi ro cao.
+benchmarks/p6_risk_budget.py | Thử trần rủi ro khi phản hồi trễ, thiếu hoặc không được nhìn thấy.
+benchmarks/w5_memory.py | Đo chất lượng dự đoán và dung lượng SQLite thực tế của HyperMemory.
+benchmarks/w5_ensemble_comparison.py | So sánh HyperMemory cơ bản với bộ kết hợp nhiều dự đoán.
+benchmarks/w5_population_repr.py | So sánh cách tóm tắt quần thể: trung bình, histogram, ECF và biến thể khác.
+benchmarks/w5_world_recovery.py | Đo bài thử phục hồi thế giới mô phỏng và replay.
+benchmarks/w5_storage_parity.py | So sánh hành vi giao dịch SQLite với PostgreSQL tùy chọn trong dữ liệu tổng hợp.
+benchmarks/hm_representation_study.py | So sánh các cách biểu diễn bộ nhớ; tách dự báo đầy đủ phản hồi với quyết định chỉ thấy phản hồi đã chọn.
+benchmarks/hm_migration_rehearsal.py | Diễn tập chuyển schema bộ nhớ trên dữ liệu tổng hợp tạm, không phải lệnh chuyển DB thật.
+
+E. TESTS: KIỂM TRA CÁC TÌNH HUỐNG ĐÃ VIẾT
+Test thường tạo dữ liệu thử rồi xác nhận kết quả mong đợi. Có test cố tình
+cấp sai quyền hoặc làm hỏng input để kiểm tra hệ thống từ chối. Một file
+test có thể chứa nhiều bài kiểm tra, không phải chỉ có một test.
+
+tests/test_r0_agent_cycle.py | Kiểm tra vòng R0, quyền, hành động, lưu phản hồi và phát lại; 12 bài đã đạt trong lần chạy hướng dẫn.
+tests/test_world_fixture.py | Kiểm tra các luật cơ bản của thế giới mô phỏng.
+tests/test_world_guard.py | Kiểm tra cổng quyền của thế giới.
+tests/test_world_hardening.py | Thử replay bị sửa, mã yêu cầu xung đột và checkpoint cục bộ.
+tests/test_hyper_memory_p1e.py | Kiểm tra hợp đồng/hành vi bộ nhớ HyperMemory cơ bản.
+tests/test_hyper_memory_owner_namespace.py | Kiểm tra sự kiện theo chủ sở hữu và quy trình chuyển schema có điều kiện.
+tests/test_hyper_memory_ensemble.py | Kiểm tra giao dịch, replay và nhãn nguồn gốc khi dùng ensemble.
+tests/test_memory_contracts.py | Kiểm tra loại sự kiện và quy tắc chọn tuyến xử lý bộ nhớ.
+tests/test_memory_representation_study.py | Kiểm tra các cách biểu diễn bộ nhớ và tính đúng của đo đạc.
+tests/test_math_kernel.py | Kiểm tra phép toán xác suất và ví dụ bộ nhớ bị mất thông tin.
+tests/test_composable_world_experiment.py | Kiểm tra bài thử ghép quá trình/luật thế giới độc lập với runtime chính.
+tests/test_population_repr.py | Kiểm tra bản tóm tắt quần thể và genome thử nghiệm.
+tests/test_population_links.py | Kiểm tra trao đổi nhóm, từ chối yêu cầu sai và replay.
+tests/test_p1_population_learning.py | Kiểm tra bài học bandit P1 và các đối chứng.
+tests/test_p2_stateful_cooperation.py | Kiểm tra tương tác hợp tác có trạng thái P2.
+tests/test_p3_mutual_learning_w3.py | Kiểm tra tích hợp nhiều bên học trong W3.
+tests/test_p4_sample_efficiency.py | Kiểm tra hiệu quả học, thay đổi đối tác và trạng thái.
+tests/test_p5_risk_aware.py | Kiểm tra giới hạn rủi ro và phản hồi của hành động được chọn.
+tests/test_p6_risk_budget.py | Kiểm tra trần rủi ro và cách xử lý phản hồi thiếu/chậm.
+tests/test_institution_proposals.py | Kiểm tra đề xuất điều lệ không tự tăng quyền hoặc gây tác dụng thực thi.
+tests/test_trust_boundaries.py | Kiểm tra ranh giới quyền và nguồn gốc trong dữ liệu thử.
+tests/test_durable_identity.py | Kiểm tra tham chiếu phiên/quyền bền vững, gồm các yêu cầu đối kháng.
+tests/test_protocol_revocation.py | Kiểm tra thu hồi quyền được lưu lại.
+tests/test_anti_rollback.py | Kiểm tra tình huống đưa dữ liệu quyền về bản cũ và witness.
+tests/test_witness_recovery.py | Kiểm tra chẩn đoán witness, gồm các trạng thái không thể kết luận chắc chắn.
+tests/test_sec001_hypermemory_integration.py | Kiểm tra cổng bảo vệ khi tích hợp với kho HyperMemory SQLite.
+tests/test_sec002_storage_rollback.py | Đối chứng giới hạn bảo mật khi khôi phục DB cũ; có lỗi dự kiến, không phải chứng nhận bảo mật production.
+tests/test_transactional_world.py | Kiểm tra tính nguyên tử của đồng thuận/chuyển tài nguyên trong một DB thử nghiệm.
+tests/test_postgres_control_plane.py | Kiểm tra nhánh PostgreSQL tùy chọn; kiểm tra tích hợp thật cần môi trường riêng.
+tests/test_gate11_reproduction_bundle.py | Kiểm tra công cụ gom bằng chứng, không tự đóng vai người đánh giá độc lập.
+tests/test_hm_fresh_holdout_evidence.py | Kiểm tra bằng chứng HyperMemory với seed giữ riêng đã khai báo.
+tests/test_hm_migration_rehearsal.py | Kiểm tra diễn tập chuyển schema trên dữ liệu tổng hợp, có bài nhiều dòng.
+tests/test_hm_sanitized_copy_rehearsal.py | Kiểm tra quy trình đọc/diễn tập bản sao dữ liệu đã làm sạch bằng fixture.
+tests/test_w5_memory_oracle.py | Kiểm tra cách tính kết quả chuẩn của benchmark bộ nhớ độc lập với dự đoán được đo.
+tests/test_w5_ensemble_comparison.py | Kiểm tra bộ đo và đối chứng của so sánh ensemble.
+tests/test_w5_population_repr.py | Kiểm tra benchmark biểu diễn quần thể.
+tests/test_w5_p3_measured_holdout.py | Kiểm tra cấu trúc bằng chứng P3 nhiều seed được ghim vào lần chạy cụ thể.
+tests/test_w5_world_recovery.py | Kiểm tra phục hồi mô phỏng ở cấp tiến trình và giao dịch chưa hoàn tất.
+tests/test_w5_storage_parity.py | Kiểm tra hợp đồng so sánh lưu trữ; không mặc nhiên chạy PostgreSQL thật.
+tests/test_w5_report_validation.py | Kiểm tra trình xác nhận báo cáo bằng dữ liệu thử.
+tests/test_w5_manual_pg_workflow.py | Kiểm tra tĩnh cấu hình workflow PostgreSQL thủ công.
+tests/test_w5_postgres_local_runner.py | Kiểm tra công cụ chạy PostgreSQL local, không tự khởi container trong bài test.
+
+F. SCRIPTS: CÔNG CỤ HỖ TRỢ
+
+scripts/check_repository.py | Kiểm tra cấu trúc/file bắt buộc của repository.
+scripts/gate11_reproduction_bundle.py | Gom kết quả/bằng chứng tái lập có mã commit; vẫn cần người đánh giá độc lập.
+scripts/hm_sanitized_copy_rehearsal.py | Đọc kiểm tra/diễn tập trên bản sao SQLite đã được phép và làm sạch; không phải công cụ cho người mới tự chuyển dữ liệu thật.
+scripts/verify_w5_pg_report.py | Kiểm tra hình dạng và điều kiện báo cáo PostgreSQL; báo cáo hợp lệ chưa chứng minh đã chạy DB thật.
+scripts/run_w5_pg_local.sh | Script shell cho bài thử PostgreSQL local; không cần để chạy R0 trên PowerShell.
+
+G. DOCS CƠ BẢN VÀ TÌNH TRẠNG NGHIÊN CỨU
+
+docs/vi/README.md | Tổng quan tiếng Việt cho người mới.
+docs/vi/GLOSSARY.md | Từ điển các thuật ngữ Anh-Việt.
+docs/vi/GETTING-STARTED.md | Hướng dẫn bắt đầu; một số đoạn mô tả giai đoạn trước khi có demo R0, cần đối chiếu README/code hiện có.
+docs/vi/ARCHITECTURE.md | Giải thích kiến trúc bằng tiếng Việt.
+docs/ARCHITECTURE.md | Sơ đồ bộ phận và các nguyên tắc thiết kế.
+docs/DECISIONS.md | Các quyết định kiến trúc cùng trạng thái chấp nhận/đề xuất.
+docs/WORKSTREAMS.md | Trách nhiệm các nhánh W0..W5; không phải các phiên bản sản phẩm.
+docs/ROADMAP.md | Lộ trình R0..R4, ưu tiên tích hợp và kiểm chứng trước mở rộng.
+docs/ROADMAP-LEGACY-20261029.md | Lộ trình cũ để tra lịch sử; không dùng thay lộ trình hiện hành.
+docs/R0-INTEGRATED-AGENT-VERTICAL-SLICE.md | Mục tiêu vòng agent tích hợp và điều kiện nghiệm thu; có mục pending dù demo đã tồn tại.
+docs/GOVERNANCE-REVIEW-POLICY.md | Cách tiếp nhận/hoãn/bác bỏ đề xuất dựa trên bằng chứng.
+docs/PROJECT-NAMING.md | Tên chính thức và phạm vi tên gọi dự án.
+research/RESEARCH-STATUS.md | Những gì đang nghiên cứu, câu hỏi mở và giới hạn kết luận.
+
+H. DOCS/PROJECT: LỊCH SỬ VÀ TIẾP NỐI CÔNG VIỆC
+
+docs/project/PROJECT-CONTINUITY.md | Tóm tắt bối cảnh và nguyên tắc để tiếp tục qua nhiều phiên làm việc.
+docs/project/DECISION-LEDGER.md | Sổ quyết định/giả thuyết: cái nào đã nhận, cái nào chỉ mới đề xuất.
+docs/project/SESSION-SOURCE-REGISTER.md | Danh sách nguồn và nguồn nào chưa đọc/xác minh được.
+docs/project/EXECUTION-HANDOFF.md | Bàn giao việc tiếp theo và yêu cầu bằng chứng kiểm chứng độc lập.
+docs/project/SESSION-SYNTHESIS-20261028.md | Tổng hợp ý tưởng lịch sử về game, giao thức, agent và xã hội mô phỏng.
+
+I. DOCS THIẾT KẾ CHI TIẾT: ĐỌC SAU KHI HIỂU DEMO
+Các tài liệu ở đây có cả đề xuất và tham chiếu thử nghiệm. Đọc nhãn trạng
+thái trong từng file; một thiết kế có mặt không có nghĩa đã được triển khai.
+
+docs/contracts/INTERFACES.md | Ranh giới/giao diện giữa các bộ phận.
+docs/contracts/EVENT-ENVELOPE-v1.schema.json | Khuôn kiểm tra trường dữ liệu của sự kiện; không phải nhật ký các sự kiện đã xảy ra.
+docs/rfcs/RFC-006-MEMORY-AND-AGENT-CONTRACTS.md | Đề xuất hợp đồng dữ liệu/giao diện của agent và bộ nhớ.
+docs/rfcs/RFC-006-REVIEW-CHECKLIST.md | Danh sách câu hỏi cần kiểm tra khi review RFC-006.
+docs/hypermemory/HM-P1e-EXPERIMENTAL.md | Giải thích bộ nhớ dự đoán HM-P1e và giới hạn.
+docs/hypermemory/HM-P1e-ENSEMBLE-ADAPTER.md | Thiết kế tùy chọn ghép ensemble với bộ nhớ.
+docs/math/RFC-007-OPENWORLD-MATHEMATICAL-FOUNDATIONS.md | Đề xuất nền tảng toán cho agent thích nghi.
+docs/math/MATHKERNEL-P0-IMPLEMENTATION-GATES.md | Các điều kiện triển khai/kiểm chứng MathKernel.
+docs/math/W2-MATHKERNEL-P0-EXECUTABLE.md | Mô tả phần toán tham chiếu có thể thực thi.
+docs/math/COMPOSITIONAL-WORLD-NOTES.md | Ghi chú nghiên cứu về ghép các quá trình thế giới.
+docs/math/SOURCE-RECONCILIATION.md | Đối chiếu nguồn/khái niệm cho nền tảng toán.
+docs/experiments/COMPOSABLE-WORLD-FIXTURE.md | Giải thích bài thử ghép thế giới độc lập.
+docs/world/W3-EXPERIMENTAL-FIXTURE.md | Luật và phạm vi thế giới W3 cục bộ.
+docs/world/W3-SCOPED-GATEWAY-RESEARCH.md | Thiết kế cổng đọc/hành động có kiểm tra quyền.
+docs/world/W3-POPULATION-LINKS-P0.md | Thiết kế trao đổi giữa các nhóm agent trong một thế giới.
+docs/world/ORGANIZATION-CHARTER-P0.md | Đề xuất điều lệ tổ chức và xét điều kiện; không tự trao quyền.
+docs/protocols/INTERWORLD-DISCOVERY-P0.md | Ý tưởng tìm thấy metadata của thế giới khác; không tự chuyển quyền.
+docs/protocols/W4-PERSISTENT-REVOCATION-REFERENCE.md | Tham chiếu lưu thu hồi quyền qua phiên chạy.
+docs/protocols/ISSUE-035-BILATERAL-CONSENT-DESIGN.md | Đề xuất đồng thuận hai bên trước giao dịch khác chủ.
+docs/storage/STORAGE-TRANSACTION-P0.md | Tham chiếu giao dịch chung trong một SQLite có thẩm quyền.
+docs/storage/POSTGRESQL-CONTROL-PLANE-PILOT-P1.md | Nhánh thử lưu trữ PostgreSQL tùy chọn.
+docs/decisions/ADR-008-OPENWORLD-STORAGE-TIERS.md | Quyết định/phạm vi các tầng SQLite local và PostgreSQL.
+docs/security/SEC-001-TRUST-BOUNDARIES-AND-RECOVERY.md | Ranh giới tin cậy, neo bằng chứng và phục hồi SQLite.
+docs/security/SEC-002-AUTHENTICATED-CAPABILITIES.md | Quyền bền vững và ràng buộc chủ thể được xác thực trong tham chiếu.
+docs/security/SEC-003-ANTI-ROLLBACK-WITNESS-P0.md | Thiết kế witness để chống khôi phục quyền từ bản dữ liệu cũ.
+docs/security/SEC-003-RECOVERY-ASSESSMENT-P1.md | Đánh giá phục hồi chỉ đọc và các trường hợp chưa thể kết luận.
+docs/security/HM-EVENT-NAMESPACE-MIGRATION.md | Hướng dẫn chuyển mã sự kiện bộ nhớ sang phạm vi theo chủ sở hữu.
+docs/security/HM-SANITIZED-COPY-REHEARSAL.md | Quy trình kiểm tra bản sao dữ liệu đã làm sạch và được phép sử dụng.
+docs/research/RELATED-RESEARCH-AND-PROJECTS.md | Bản đồ bài nghiên cứu/dự án tham khảo; không phải kết quả OpenWorld đã tự đạt.
+docs/research/POPULATION-REPRESENTATION-AND-AGENT-DNA.md | Nghiên cứu biểu diễn nhóm và genome; không phải DNA sinh học.
+
+J. DOCS/EVALUATION: KẾ HOẠCH ĐO VÀ BÁO CÁO KẾT QUẢ
+File .md giải thích cách đo/kết quả. File .json chứa số liệu có cấu trúc
+của lần chạy đã lưu; không phải trọng số model. Đọc báo cáo trước số liệu.
+
+docs/evaluation/GATE-011-INDEPENDENT-REPRODUCTION-HANDOFF.md | Hướng dẫn người khác tái lập độc lập bài thử.
+docs/evaluation/GATE-011-INTEGRATED-VERIFICATION-2026-10-28.md | Tổng hợp bằng chứng CI/W5 của mốc ghi trong tên file.
+docs/evaluation/HM-R0-PREDICTIVE-REPRESENTATION-STUDY.md | Kế hoạch so sánh bộ nhớ dự đoán tham số, Markov và phổ.
+docs/evaluation/HM-W5-FRESH-SEED-HOLDOUT-20261103.md | Bài đánh giá bộ nhớ với nhóm seed giữ riêng mới.
+docs/evaluation/HM-20K-SYNTHETIC-MIGRATION-REHEARSAL.md | Diễn tập chuyển schema trên 20.000 sự kiện tổng hợp.
+docs/evaluation/P1-THIRTY-AGENT-ONLINE-LEARNING.md | Mô tả bài học bandit P1 với 30 agent và các baseline.
+docs/evaluation/P1-THREE-SEED-CI-REPORT.md | Báo cáo P1 trên ba seed, nêu cả chi phí/giới hạn.
+docs/evaluation/P1-THREE-SEED-CI-RESULTS.json | Dữ liệu kết quả P1 của báo cáo tương ứng.
+docs/evaluation/P2-STATEFUL-COOPERATION-EXPERIMENT.md | Thiết kế bài hợp tác có trạng thái P2.
+docs/evaluation/P2-THREE-SEED-HOLDOUT-REPORT.md | Báo cáo P2 trên ba seed kiểm tra riêng.
+docs/evaluation/P2-THREE-SEED-HOLDOUT.json | Dữ liệu kết quả P2 của báo cáo tương ứng.
+docs/evaluation/P3-MUTUAL-LEARNING-W3.md | Thiết kế P3: hai phía có policy học riêng trong W3.
+docs/evaluation/P3-THREE-SEED-RESULTS-REPORT.md | Báo cáo P3, gồm kết quả không đạt cải thiện mong đợi.
+docs/evaluation/P3-THREE-SEED-RESULTS.json | Dữ liệu kết quả P3.
+docs/evaluation/P4-SAMPLE-EFFICIENCY-PARTNER-SHIFTS.md | Thiết kế đánh giá hiệu quả học và đối tác thay đổi.
+docs/evaluation/P4-FIVE-SEED-RESULTS-REPORT.md | Báo cáo P4 trên năm seed.
+docs/evaluation/P4-FIVE-SEED-RESULTS.json | Dữ liệu kết quả P4.
+docs/evaluation/P5-RISK-AWARE-PROBING-ABSTENTION.md | Thiết kế giới hạn thăm dò và lựa chọn không hành động.
+docs/evaluation/P5-FIVE-SEED-RESULTS-REPORT.md | Báo cáo P5 với kết quả hỗn hợp, không có cách thắng mọi trường hợp.
+docs/evaluation/P5-FIVE-SEED-RESULTS.json | Dữ liệu kết quả P5.
+docs/evaluation/P6-EXPOSURE-CAP-AND-CENSORED-FEEDBACK.md | Thiết kế trần rủi ro và phản hồi không đầy đủ P6.
+docs/evaluation/P6-TEN-SEED-RESULTS-REPORT.md | Báo cáo P6 trên mười seed.
+docs/evaluation/P6-TEN-SEED-840-CASES.json | Dữ liệu 840 trường hợp tổng hợp của P6.
+docs/evaluation/W3-REPLAY-HARDENING-20261029.md | Báo cáo gia cố replay, mã yêu cầu và checkpoint.
+docs/evaluation/W5-INDEPENDENT-BENCHMARK.md | Quy trình đánh giá HyperMemory và yêu cầu đo công bằng.
+docs/evaluation/W5-ENSEMBLE-RESULTS.md | Báo cáo so sánh bộ nhớ với ensemble.
+docs/evaluation/W5-ENSEMBLE-LOCAL-RESULTS.json | Số liệu local của bài so sánh ensemble.
+docs/evaluation/W5-POPULATION-REPRESENTATION-BASELINES.md | Kế hoạch so sánh các cách tóm tắt quần thể.
+docs/evaluation/W5-WORLD-RECOVERY-AND-CONCURRENCY-20261029.md | Đánh giá phục hồi thế giới, truy cập đồng thời và tình huống đối kháng.
+docs/evaluation/W5-POSTGRESQL-SQLITE-PARITY-P1.md | Quy trình so sánh tính chất giao dịch PostgreSQL/SQLite.
+docs/evaluation/W5-POSTGRES-REPORT-ACCEPTANCE-GATE.md | Điều kiện chấp nhận báo cáo của bài thử PostgreSQL.
+docs/evaluation/W5-LOCAL-POSTGRESQL-RUNBOOK.md | Hướng dẫn môi trường PostgreSQL local tạm cho bài thử; đọc sau.
+
+TÌNH TRẠNG ĐÃ CHẠY TRONG PHIÊN HƯỚNG DẪN 15/11/2026
+- Demo R0: exit code 0, replay PASS, số dư Alice 1/Bob 5.
+- Demo world 6 agent/3 bước/seed 2026: exit code 0, 9 sự kiện, replay PASS.
+- Riêng tests/test_r0_agent_cycle.py: 12 tests, OK.
+- Không khẳng định toàn bộ test/benchmark hay mọi thiết kế ở trên đã được kiểm chứng.

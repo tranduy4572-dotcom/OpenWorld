@@ -1,0 +1,444 @@
+HỌC AI QUA NHỮNG VIỆC CÓ THỂ HÌNH DUNG ĐƯỢC
+Dành cho cách học: hình dung tình huống -> tự giải thích -> đối chiếu khái niệm.
+Dự án: D:\AIagent _openworld\OpenWorld-main
+Bản hướng dẫn cá nhân, viết lại ngày 15/11/2026.
+
+CÁCH ĐỌC FILE NÀY
+
+Mỗi lần chỉ đọc một tình huống. Chưa cần thuộc các từ tiếng Anh.
+Bạn có thể dừng lại và nói với tôi:
+"Tôi hình dung nó như thế này: ... Cách hiểu đó đúng đến đâu?"
+
+Tôi sẽ đối chiếu phần bạn hiểu đúng, chỉ ra chỗ cần sửa, rồi dùng tiếp
+chính tình huống đó để giải thích. Không cần diễn đạt bằng thuật ngữ.
+
+Các tình huống cửa hàng dưới đây là ví dụ để học, chưa phải chức năng
+OpenWorld đang có. Từ phần 7 trở đi mới đi vào demo thật của dự án.
+
+
+1. BẠN MỞ MỘT QUẦY NƯỚC: VIẾT LUẬT CHO MÁY LÀ GÌ?
+
+Giả sử bạn muốn máy gợi ý đồ uống cho khách.
+
+Bạn tự đặt luật:
+- Trời nóng thì gợi ý trà đá.
+- Trời lạnh thì gợi ý trà nóng.
+
+Bạn nhập "nóng", máy trả "trà đá".
+Lặp lại 100 lần thì nó vẫn làm theo luật bạn viết.
+
+Bây giờ có khách trời nóng nhưng vẫn thích trà nóng.
+Nếu bạn không viết thêm luật, chương trình chưa có cách tự điều chỉnh
+chỉ vì gặp khách đó. Bạn có thể sửa code để thêm trường hợp mới.
+
+Hãy hình dung: bạn đưa cho nhân viên một tờ hướng dẫn và bảo làm đúng tờ đó.
+
+Tên gọi sau khi đã hình dung: đây là chương trình dùng luật cố định.
+Trong các bài toán AI cũng có cách dùng luật. Không phải cứ nói đến AI
+là phải có một mô hình khổng lồ được huấn luyện.
+
+Dừng ở đây nếu muốn:
+Bạn thử kể một ví dụ máy làm theo luật mà bạn từng gặp.
+
+
+2. VẪN QUẦY NƯỚC ĐÓ: MÁY "HỌC" KHÁC GÌ?
+
+Bạn thấy chỉ nhìn trời nóng/lạnh là chưa đủ.
+Bạn có một bảng đơn hàng cũ, chẳng hạn:
+
+Nhiệt độ | Giờ mua | Khách đã chọn
+32 độ   | 12 giờ  | Trà đá
+20 độ   | 7 giờ   | Trà nóng
+30 độ   | 8 giờ   | Trà đá
+... nhiều đơn khác ...
+
+Lần này, thay vì tự viết hết các luật, bạn chọn một phương pháp có thể
+điều chỉnh cách kết hợp các thông tin.
+
+Trong giai đoạn học:
+1) Chương trình nhận nhiệt độ và giờ mua của một đơn hàng cũ.
+2) Nó thử dự đoán đồ uống.
+3) Nó so với món khách thực sự đã chọn.
+4) Thuật toán điều chỉnh các con số dùng để dự đoán.
+5) Lặp lại với nhiều đơn hàng.
+
+Sau đó bạn đưa một trường hợp mới: 29 độ, 10 giờ.
+Chương trình dùng những con số đã điều chỉnh để dự đoán.
+
+Nó không nhất thiết tìm đúng một dòng giống hệt trong bảng cũ.
+Mục tiêu là tìm được các liên hệ giúp dự đoán cả trường hợp chưa gặp.
+Nhưng nó vẫn có thể đoán sai; dữ liệu cũ không đảm bảo khách mới giống vậy.
+
+Hãy hình dung: thay vì chỉ phát tờ luật, bạn cho nhân viên luyện trên nhiều
+đơn hàng và sửa cách ước lượng qua các lần đoán sai.
+
+Tên gọi:
+- Machine learning / học máy: quá trình học các liên hệ từ dữ liệu.
+- Model / mô hình: cách tính cùng các tham số dùng để tạo dự đoán.
+- Tham số: những con số thuật toán điều chỉnh trong quá trình học.
+
+So sánh với nhân viên chỉ để dễ hình dung. Trong máy là phép tính và cập
+nhật số; không từ đó kết luận máy có trải nghiệm hoặc hiểu như con người.
+
+Câu để bạn thử diễn đạt:
+"Tôi hiểu máy học trong ví dụ này là ..."
+
+
+3. BẠN ĐƯA ẢNH VÀO THAY VÌ GÕ THÔNG TIN: HỌC SÂU XUẤT HIỆN Ở ĐÂU?
+
+Giờ bạn muốn máy nhìn ảnh và đoán: đây là cốc hay chai?
+
+Với bảng đơn hàng, nhiệt độ và giờ đã là những con số rõ ràng.
+Với ảnh, đầu vào là rất nhiều con số biểu diễn màu/độ sáng của các điểm ảnh.
+Máy cần tìm cách kết hợp chúng để phân biệt vật thể.
+
+Một cách làm là dùng nhiều tầng tính toán nối tiếp:
+Các số của ảnh -> biến đổi qua tầng 1 -> tầng 2 -> ... -> dự đoán cốc/chai.
+
+Trong lúc huấn luyện, bạn đưa ảnh có đáp án, ví dụ "đây là cốc".
+Hệ thống dùng sai số dự đoán để điều chỉnh tham số ở nhiều tầng.
+
+Để dễ tưởng tượng, các tầng có thể học những dấu hiệu từ đơn giản như
+cạnh/họa tiết đến những tổ hợp hữu ích hơn cho việc nhận ra vật thể.
+Đó là minh họa; không phải mạng nào cũng có từng tầng mang ý nghĩa rõ
+ràng "tầng này nhìn quai, tầng kia nhìn miệng cốc".
+
+Tên gọi:
+- Mạng nơ-ron: cấu trúc tính toán có các phần tử nối với nhau bằng trọng số.
+- Deep learning / học sâu: nhóm phương pháp học máy dùng mạng nhiều tầng.
+
+"Deep" nói về cấu trúc nhiều tầng, không có nghĩa máy suy nghĩ sâu sắc
+như một con người. Không phải bài học máy nào cũng cần dùng cách này.
+
+Tạm thời bạn chỉ cần hình dung:
+Bảng số đơn giản có thể dùng mô hình nhỏ.
+Ảnh/âm thanh/ngôn ngữ có thể dùng mạng nhiều tầng để học cách xử lý.
+
+
+4. BẠN CHUYỂN TỪ NHÌN ẢNH SANG NÓI CHUYỆN: LLM LÀM GÌ?
+
+Bạn gõ: "Viết giúp tôi lời giới thiệu quầy nước."
+
+Phần mềm đổi văn bản thành những mảnh gọi là token.
+Một token có thể là một phần từ, một từ hoặc dấu/ký hiệu, tùy cách mã hóa.
+
+Model xử lý ngữ cảnh và tính xác suất cho các token có thể xuất hiện tiếp.
+Chương trình chọn một token theo cách tạo đầu ra đã cấu hình, thêm vào
+đoạn hiện có, rồi lặp lại để tạo thành câu trả lời.
+
+Hình dung đơn giản:
+Đoạn hiện có -> các khả năng tiếp theo -> chọn tiếp -> đoạn dài hơn.
+
+Để có khả năng đó, model đã được huấn luyện trước trên dữ liệu.
+Trong huấn luyện, rất nhiều tham số được điều chỉnh để học các liên hệ.
+Khi bạn sử dụng model, nó dùng các tham số đã có để tính câu trả lời.
+
+Tên gọi:
+- LLM: mô hình ngôn ngữ lớn; các LLM tạo văn bản phổ biến dùng học sâu.
+- Inference: dùng model hiện có để xử lý một yêu cầu.
+- Training: giai đoạn điều chỉnh tham số model.
+
+Điều bạn biết về "dự đoán token" vẫn có ích.
+Đó là cơ chế tạo văn bản, không chỉ là một giai đoạn chatbot cũ.
+Model có thể học nhiều mẫu liên hệ phức tạp; muốn biết làm tốt việc nào
+vẫn phải kiểm tra trên việc đó.
+
+Dự đoán văn bản cũng không tự xác minh mọi câu là thật.
+Chẳng hạn, model có thể viết "quầy còn 20 chai nước" dù chưa đọc kho hàng.
+
+
+5. KHÁCH DẶN "ÍT ĐƯỜNG": NHỚ THÔNG TIN KHÁC HỌC LẠI THẾ NÀO?
+
+Khách nói: "Tôi tên Nam, lần sau nhớ cho tôi ít đường."
+
+Có ba việc khác nhau:
+
+A) Nhân viên nhìn tờ giấy trên bàn
+Trong lượt xử lý này, chương trình nhận thêm thông tin "Nam thích ít đường".
+Hình dung đó là thông tin đang được đặt trước mặt để dùng ngay.
+Tên gọi: ngữ cảnh / context.
+
+B) Cửa hàng ghi vào sổ
+Ứng dụng lưu "Nam thích ít đường" vào file/cơ sở dữ liệu.
+Lần sau ứng dụng tìm lại và đưa thông tin đó cho bộ phận trả lời.
+Tên gọi: bộ nhớ của ứng dụng / memory.
+
+C) Điều chỉnh cách dự đoán
+Thuật toán dùng dữ liệu/phản hồi để thay đổi các tham số của model.
+Đây mới là cập nhật mô hình; có thể là huấn luyện hoặc học trực tuyến
+tùy hệ thống.
+
+A, B, C có thể phối hợp với nhau, nhưng là các thao tác khác nhau.
+Một ứng dụng nhớ tên bạn không chứng minh model đã được huấn luyện lại.
+Model được huấn luyện cũng không có nghĩa nó giữ được nhật ký chính xác
+của từng sự kiện bạn muốn tra lại.
+
+Trong OpenWorld, HyperMemory có thể vừa ghi sự kiện vào sổ, vừa cập nhật
+thống kê dự đoán. Khi đọc code ta sẽ tìm riêng hai việc này.
+
+Bạn thử diễn đạt:
+"Nếu ứng dụng lưu sở thích của tôi và đọc lại, tôi hình dung nó đang ..."
+
+
+6. BẠN GIAO VIỆC "KIỂM TRA KHO VÀ ĐỀ XUẤT NHẬP HÀNG": AGENT LÀ GÌ?
+
+Hãy tưởng tượng cửa hàng có phần mềm với các công cụ:
+- Đọc số lượng tồn kho.
+- Tính số lượng cần nhập.
+- Tạo đề nghị nhập hàng.
+
+Bạn giao mục tiêu: "Đảm bảo đủ nước cho ngày mai."
+
+Một vòng làm việc có thể là:
+1) Đọc kho: còn 2 chai.
+2) Đọc kế hoạch: ngày mai cần 10 chai.
+3) Chọn việc tiếp theo: đề nghị nhập thêm 8 chai.
+4) Kiểm tra quyền: phần mềm có được tạo đề nghị không?
+5) Gọi công cụ tạo đề nghị.
+6) Đọc kết quả công cụ trả về: thành công hay bị từ chối?
+7) Dựa vào kết quả để làm tiếp hoặc báo lại.
+
+Tên gọi: một vòng hoạt động của agent.
+Policy / chính sách là cách chọn việc sẽ làm ở bước 3.
+
+Phần chọn hành động có thể dùng LLM. Nó cũng có thể chỉ là phép tính
+10 - 2 = 8 và các luật được viết trước.
+Vì vậy một agent không nhất thiết cần LLM hoặc tự học.
+
+Nếu dùng LLM, model có thể đề nghị "gọi công cụ tạo đề nghị nhập 8 chai".
+Phần mềm bên ngoài model xử lý quyền, thực thi công cụ và nhận kết quả.
+Một câu trả lời "đã nhập hàng" chưa chứng minh công cụ thật sự được gọi.
+
+Các công cụ cửa hàng vừa kể là ví dụ minh họa, không phải tích hợp hiện
+có của OpenWorld.
+
+
+7. QUAY VỀ OPENWORLD: THAY CỬA HÀNG BẰNG BÀI THỬ NHỎ
+
+Trong demo R0, bạn có thể hình dung hai người chơi trong một trò chơi:
+Alice có 3 đồng xu giả, Bob có 3 đồng xu giả.
+
+Trong code, "người chơi" là dữ liệu; "đồng xu" là số tài nguyên mô phỏng.
+Chương trình chưa có hình ảnh nhân vật, cửa sổ chat hay cửa hàng thật.
+
+Alice thực hiện một vòng:
+1) Xem số dư và hàng xóm mình được phép biết.
+2) Hỏi bộ nhớ: dự đoán phản hồi tích cực hiện là bao nhiêu?
+3) Nếu dự đoán từ 50% trở lên và đủ số dư, chọn chuyển 1 đơn vị cho Bob.
+   Nếu không, chọn gửi tín hiệu.
+4) Cổng quyền kiểm tra hành động có được phép không.
+5) Luật thế giới cập nhật dữ liệu nếu chấp nhận hành động.
+6) Lưu sự kiện và cập nhật dự đoán từ phản hồi thử nghiệm.
+7) Phát lại các đầu vào để xem có dựng ra đúng trạng thái thế giới không.
+
+Bạn có thể nhớ các bộ phận bằng hình ảnh:
+- World: bàn chơi với số dư và luật chơi.
+- Agent: người chơi được biểu diễn trong dữ liệu.
+- Policy: cách người chơi chọn nước đi.
+- Memory: sổ ghi sự kiện và số liệu dùng dự đoán.
+- Guard: người kiểm tra quyền trước khi nước đi được thực hiện.
+- Replay: tính lại ván chơi từ trạng thái đầu và đầu vào đã ghi.
+
+Đây là hình ảnh để hiểu vai trò, không hàm ý agent có ý thức.
+
+Demo R0 không gọi LLM, không cần API key hay GPU.
+Token văn bản của LLM, token cấp quyền và đồng tài nguyên giả trong ví dụ
+là các thứ khác nhau.
+
+
+8. THEO DÕI BA LƯỢT THẬT CỦA DEMO
+
+Kết quả đã chạy trên máy này ngày 15/11/2026, trong phiên hướng dẫn trước:
+Lượt | Dự đoán trước hành động | Alice làm gì? | Phản hồi cấp sẵn
+0    | 50%                    | Chuyển 1      | 0
+1    | 33,33%                 | Gửi tín hiệu  | 1
+2    | 50%                    | Chuyển 1      | 1
+
+Alice: 3 -> 2 -> 2 -> 1.
+Bob:   3 -> 4 -> 4 -> 5.
+Replay của thế giới: PASS.
+
+Vì sao lần đầu dự đoán 50%, sau đó 33,33%, rồi lại 50%?
+
+Trong ba lượt này, bộ dự đoán dùng cách đếm được làm trơn:
+- Ban đầu thêm sẵn lượng đếm tương đương 1 tích cực và 1 tiêu cực: 1/2.
+- Nhận thêm phản hồi 0: 1/3.
+- Nhận thêm phản hồi 1: 2/4.
+
+Đó là phép cập nhật thống kê nhỏ. Không phải huấn luyện mạng ngôn ngữ lớn.
+
+Điểm cần hiểu đúng:
+Chuỗi 0, 1, 1 do kịch bản cấp sẵn, kể cả lượt Alice chỉ gửi tín hiệu.
+Không được diễn giải số 1 thành "Bob đã trả tiền" hoặc "Bob tự học cách hợp tác".
+Demo đang thử các bộ phận hoạt động nối tiếp, chưa chứng minh cách chọn
+này là tốt hơn những cách đơn giản khác.
+
+INFERRED trên đầu ra: đây là giá trị dự đoán.
+SIMULATED: đây là dữ liệu của mô phỏng.
+Replay PASS: tính lại đúng trạng thái thế giới được kiểm tra, không xác nhận
+một sự kiện ngoài đời là thật.
+
+
+9. THẾ CÒN NHỮNG AGENT THỰC SỰ HỌC THÌ SAO?
+
+Tiếp tục hình dung quầy nước: mỗi lần bạn chọn trưng trà đá hoặc trà nóng
+và nhận một phản hồi cho lựa chọn đó. Chương trình dùng phản hồi để điều
+chỉnh cách chọn lần sau; nó không được biết chắc kết quả của lựa chọn
+mà nó chưa thực hiện.
+
+Một dạng bài toán như vậy gọi là contextual bandit.
+OpenWorld có bài P1 cho các agent tổng hợp học theo dạng này.
+Policy được dùng chung theo vai trò, cập nhật từ phản hồi của hành động
+đã chọn. Đây là học theo thuật toán, không phải huấn luyện LLM.
+
+Nếu hành động còn làm đổi tình trạng cửa hàng và ảnh hưởng nhiều bước
+sau, ta phải quan tâm cả hệ quả dài hạn. Đó là vấn đề quan trọng trong
+học tăng cường. Một bài chọn món một lượt chưa bao quát vấn đề này.
+
+Các tên gọi khác có thể gặp:
+- Học có giám sát: ví dụ bảng đơn hàng có sẵn món khách đã chọn.
+- Học không giám sát: ví dụ tìm các nhóm đơn hàng giống nhau mà chưa có
+  nhãn nhóm do người cung cấp.
+- Học tăng cường: học cách hành động từ phần thưởng qua tương tác.
+
+Repo có thêm P2/P3 về tương tác có trạng thái, P4 về hiệu quả học và đổi
+đối tác, P5/P6 về rủi ro và phản hồi thiếu/chậm. Bạn chưa cần đọc chúng
+để hiểu demo R0.
+
+
+10. BIẾT MÁY LÀM ĐÚNG VÀ BIẾT MÁY LÀM TỐT LÀ HAI CÂU HỎI
+
+Quay lại cửa hàng:
+- "Không có quyền thì có bị chặn tạo đề nghị nhập hàng không?"
+  Đây là kiểm tra một yêu cầu cụ thể. Tương tự một test.
+- "Dùng phương pháp này có dự đoán nhu cầu tốt hơn luôn nhập 10 chai không?"
+  Cần đo trên nhiều ngày, so với cách đơn giản. Tương tự benchmark.
+
+Baseline: cách đơn giản dùng làm mốc so sánh.
+Holdout: các trường hợp được giữ riêng để kiểm tra, không dùng để điều
+chỉnh trong lần đánh giá đó. Hình dung như bài tập mới sau khi đã luyện.
+
+Test đạt không tự chứng minh phương pháp hữu ích hơn baseline.
+Dự đoán tốt trên các đơn đã luyện cũng chưa đảm bảo tốt trên khách mới.
+
+Tương tự, code thử nghiệm đã chạy không đồng nghĩa đã sẵn sàng quản lý
+kho thật. Riêng R0, dữ liệu thế giới trong RAM và bộ nhớ SQLite chưa nằm
+trong cùng một giao dịch nguyên tử: khi crash có thể thiếu đồng bộ.
+
+
+11. CÁC FILE LÀ NHỮNG BỘ PHẬN NÀO TRONG BÀI THỬ NÀY?
+
+Hãy tưởng tượng bạn có một bộ trò chơi chưa mở hộp:
+- Tài liệu hướng dẫn: giải thích chơi gì và chơi thế nào.
+- Các bộ phận: cung cấp chức năng.
+- Kịch bản: sắp bàn chơi và gọi các bộ phận theo thứ tự.
+- Bài kiểm tra: thử xem bộ phận có làm đúng điều kiện đã đặt không.
+
+Trong OpenWorld:
+- docs/ và README.md: tài liệu.
+- src/: các bộ phận thực hiện chức năng.
+- examples/: kịch bản minh họa có thể chạy.
+- tests/: bài kiểm tra tự động.
+- benchmarks/: thí nghiệm đo và so sánh.
+- scripts/: công cụ hỗ trợ.
+- research/: tình trạng và giới hạn nghiên cứu.
+- .github/: cấu hình quy trình làm việc/kiểm tra trên GitHub.
+
+Riêng vòng R0:
+examples/r0_agent_cycle.py
+  -> Bày bàn chơi, tạo Alice/Bob, cấp quyền và gọi chạy ba vòng.
+src/openworld_superkernel/r0_cycle.py
+  -> Sắp thứ tự quan sát, dự đoán, chọn hành động, kiểm tra quyền, ghi kết quả.
+src/openworld_superkernel/hyper_memory_p1e.py
+  -> Sổ sự kiện SQLite và thống kê dự đoán.
+src/openworld_superkernel/world_fixture.py
+  -> Trạng thái, luật chơi và tính lại lịch sử mô phỏng.
+src/openworld_superkernel/world_guard.py
+  -> Cổng kiểm tra quyền đọc/hành động.
+src/openworld_superkernel/trust_boundaries.py
+  -> Cơ chế quyền và ranh giới tin cậy thử nghiệm.
+src/openworld_superkernel/memory_contracts.py
+  -> Khuôn dữ liệu và nhãn nguồn gốc của sự kiện.
+tests/test_r0_agent_cycle.py
+  -> Thử các trường hợp đúng/sai để kiểm tra vòng này.
+
+Một file không phải một agent. Nhiều file phối hợp để tạo hành vi;
+một file cũng có thể tạo nhiều agent dữ liệu.
+
+.py: mã Python. .md/.txt: tài liệu. .json: dữ liệu có cấu trúc.
+pyproject.toml: cấu hình gói Python. .yml: cấu hình tự động hóa.
+AGENTS.md là hướng dẫn cho trợ lý lập trình, không tự khởi chạy agent.
+
+Tra từng file trong BAN_DO_FILE_OPENWORLD.txt khi cần, không cần đọc hết.
+
+
+12. TỰ THỬ: CHẠY MỘT LẦN RỒI KỂ LẠI NHỮNG GÌ BẠN THẤY
+
+Mở terminal PowerShell trong IDE, nhập lần lượt:
+
+Set-Location -LiteralPath 'D:\AIagent _openworld\OpenWorld-main'
+python --version
+python -B examples/r0_agent_cycle.py
+
+Terminal là nơi nhập lệnh. Python là chương trình thực thi mã .py.
+-B hạn chế tạo cache .pyc. Demo yêu cầu Python 3.11+; lần kiểm tra trước
+máy có Python 3.12.0.
+
+Nhìn các dòng:
+- action: transfer là chuyển; signal là gửi tín hiệu.
+- p_success_before_action: dự đoán trước hành động; 0.5 là 50%.
+- final_balances: số dư cuối.
+- world_replay: kết quả phát lại.
+
+Bạn chỉ cần đối chiếu được:
+"Tôi thấy Alice chuyển hai lần, mỗi lần 1, nên còn 1. Bob nhận 2 nên có 5."
+
+Demo tạo bộ nhớ tạm và dọn khi kết thúc bình thường.
+Chạy lại sẽ tạo bài thử mới, không tiếp tục ký ức của lần chạy trước.
+
+Sau đó thử demo thế giới khác:
+python -B examples/world/demo.py --agents 6 --ticks 3 --seed 2026
+
+--agents 6: tạo 6 agent.
+--ticks 3: chạy 3 bước, không phải 3 giây.
+--seed 2026: số khởi tạo bộ sinh giả ngẫu nhiên để hỗ trợ tái lập.
+
+Bạn có thể đổi 6 thành 12 mà không sửa code.
+Đó là tạo thêm agent dữ liệu, không tự làm chúng thông minh hơn.
+Giới hạn kịch bản này: 2..1000 agent, 1..100 bước.
+
+Kiểm tra riêng vòng R0:
+python -B -m unittest discover -s tests -p test_r0_agent_cycle.py -v
+
+Lần chạy hướng dẫn trước, ngày 15/11/2026:
+- Demo R0: replay PASS, số dư Alice 1/Bob 5.
+- Demo world 6 agent/3 bước/seed 2026: 9 sự kiện, replay PASS.
+- Test R0: 12 tests, OK.
+Đây là kết quả đã ghi nhận trước khi viết lại tài liệu; lần viết lại này
+không chạy lại hoặc sửa code. Chưa chạy toàn bộ test/benchmark.
+
+OK nghĩa những kiểm tra vừa chạy đạt.
+Skipped nghĩa chưa chạy bài đó, không tính là đã đạt.
+Ctrl+C ngắt chương trình đang chạy trong terminal.
+
+
+13. CÁCH MÌNH TRAO ĐỔI TIẾP THEO
+
+Bạn không cần đọc toàn bộ file rồi mới hỏi.
+Hãy bắt đầu với tình huống quầy nước ở phần 1 và 2.
+
+Bạn có thể nhắn:
+"Tôi hiểu máy học là mình cho nó nhiều đơn hàng, nó điều chỉnh cách đoán
+thay vì mình viết hết luật. Tôi đang hình dung đúng chưa?"
+
+Hoặc:
+"Tôi đang hình dung bộ nhớ giống một cuốn sổ nằm ngoài model. Vậy khi
+model đọc sổ, nó có được tính là vừa học thêm không?"
+
+Đó là cách dùng chính hình dung của bạn để kiểm tra lý thuyết.
+Khi hình dung đã rõ, ta mới quay lại tên gọi và file tương ứng.
+
+Nguồn đối chiếu dự án: README.md, docs/ARCHITECTURE.md, docs/ROADMAP.md,
+docs/R0-INTEGRATED-AGENT-VERTICAL-SLICE.md, docs/vi/GLOSSARY.md,
+docs/evaluation/P1-THIRTY-AGENT-ONLINE-LEARNING.md và mã R0 liên quan.
+Ví dụ cửa hàng là minh họa nhập môn, không phải tuyên bố chức năng đã triển khai.

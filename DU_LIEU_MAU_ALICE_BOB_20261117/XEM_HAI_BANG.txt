@@ -1,0 +1,125 @@
+﻿HAI BẢNG SQLITE CỦA DEMO ALICE - BOB
+Ngày tạo mẫu: 17/11/2026
+Nguồn: chạy lại examples/r0_agent_cycle.py và sao lưu SQLite trước khi thư mục tạm được dọn.
+File dữ liệu thật: lab-memory.sqlite3, cùng thư mục với bản xuất này.
+
+1. BẢNG agent_state: 1 dòng
+Các cột thật: owner_id | agent_id | state_json
+owner_id: research-owner
+agent_id: alice
+state_json (tách dòng để đọc):
+{
+  "seq": 3,
+  "receipt": "48bce6684b792bc4e00d584661a5fcf34b4b3d44cec159886750647ba93531b6",
+  "n": 3,
+  "successes": 2,
+  "fast_s": 1.65,
+  "fast_w": 2.0725,
+  "slow_s": 1.96,
+  "slow_w": 2.8815999999999997,
+  "loss_static": 0.2643111111111111,
+  "loss_fast": 0.2606593940910323,
+  "loss_slow": 0.2639091113151719,
+  "selected": "static"
+}
+
+Giải thích: n=3 là đã nhận 3 phản hồi; successes=2 là có 2 phản hồi bằng 1.
+seq=3 là lần cập nhật thứ 3. selected=static là bộ dự đoán được chọn.
+Từ trạng thái cuối có thể tính (2+1)/(3+2)=0.6=60%; demo không chạy lượt thứ tư.
+
+2. BẢNG exact_events: 3 dòng
+Các cột thật: owner_id | agent_id | seq | event_id | provenance | event_type | payload | payload_hash
+Bảng rút gọn dưới đây tách action và outcome từ payload:
+seq | agent_id | action   | outcome | provenance
+  1 | alice    | transfer |       0 | simulated
+  2 | alice    | signal   |       1 | simulated
+  3 | alice    | transfer |       1 | simulated
+
+seq 1,2,3 là thứ tự bản ghi; tick 0,1,2 trong demo là thứ tự lượt.
+transfer = chuyển tài nguyên; signal = gửi tín hiệu.
+outcome 0/1 là phản hồi thử nghiệm cấp sẵn, không phải số xu.
+
+CHI TIẾT ĐẦY ĐỦ BA BẢN GHI (payload được giải mã từ BLOB):
+[
+  {
+    "owner_id": "research-owner",
+    "agent_id": "alice",
+    "seq": 1,
+    "event_id": "r0-simulated-feedback-0-alice",
+    "provenance": "simulated",
+    "event_type": "synthetic_action_feedback",
+    "payload": {
+      "action": "transfer",
+      "outcome": 0,
+      "provenance": "SIMULATED",
+      "request_id": "r0-0-alice",
+      "schema": "openworld.r0.simulated-feedback.v0",
+      "world_after": "0b93a2d8d07a89be3b9ce1d9b8f9a7e48494f8206121cb432044cfc10c2a7169",
+      "world_before": "f67025b02b8e254e517062d2c3ec2c28da2dc7fd2553be46499fd43427428a92"
+    },
+    "payload_hash": "a4988847780d5d86e6b96df8e7ff16dbed0e2b23412988f40421d8c9e523a7c9"
+  },
+  {
+    "owner_id": "research-owner",
+    "agent_id": "alice",
+    "seq": 2,
+    "event_id": "r0-simulated-feedback-1-alice",
+    "provenance": "simulated",
+    "event_type": "synthetic_action_feedback",
+    "payload": {
+      "action": "signal",
+      "outcome": 1,
+      "provenance": "SIMULATED",
+      "request_id": "r0-1-alice",
+      "schema": "openworld.r0.simulated-feedback.v0",
+      "world_after": "e9ad38ac6e3339b0193ba51c469ff1d7570e47e742662d687f9472267d69a859",
+      "world_before": "0b93a2d8d07a89be3b9ce1d9b8f9a7e48494f8206121cb432044cfc10c2a7169"
+    },
+    "payload_hash": "dbcd9aee9af5c65e4f8e4dc30cc4cac20c5914147395e53698f5d0306c3d1b23"
+  },
+  {
+    "owner_id": "research-owner",
+    "agent_id": "alice",
+    "seq": 3,
+    "event_id": "r0-simulated-feedback-2-alice",
+    "provenance": "simulated",
+    "event_type": "synthetic_action_feedback",
+    "payload": {
+      "action": "transfer",
+      "outcome": 1,
+      "provenance": "SIMULATED",
+      "request_id": "r0-2-alice",
+      "schema": "openworld.r0.simulated-feedback.v0",
+      "world_after": "a447e5faac3fa712c7f2caa8a1fbd15b6d443334f8e3290e1bb311196555c5af",
+      "world_before": "e9ad38ac6e3339b0193ba51c469ff1d7570e47e742662d687f9472267d69a859"
+    },
+    "payload_hash": "4929644c8cafaa4e43fa040f59d083326eaff3ecdd27216174ab4cfac0eb85b1"
+  }
+]
+
+3. CẤU TRÚC SQL THẬT
+
+CREATE TABLE agent_state (
+                    owner_id TEXT NOT NULL,
+                    agent_id TEXT NOT NULL,
+                    state_json TEXT NOT NULL,
+                    PRIMARY KEY (owner_id, agent_id)
+                );
+
+CREATE TABLE exact_events (
+                    owner_id TEXT NOT NULL,
+                    agent_id TEXT NOT NULL,
+                    seq INTEGER NOT NULL,
+                    event_id TEXT NOT NULL,
+                    provenance TEXT NOT NULL,
+                    event_type TEXT NOT NULL,
+                    payload BLOB NOT NULL,
+                    payload_hash TEXT NOT NULL,
+                    PRIMARY KEY (owner_id, agent_id, seq),
+                    UNIQUE (owner_id, event_id)
+                );
+
+Số dư Alice 1/Bob 5 là dữ liệu thế giới trong RAM; hai bảng này không có cột số dư xu.
+world_before/world_after trong payload là mã băm đối chiếu, không phải toàn bộ trạng thái thế giới.
+Kiểm tra mẫu: integrity_check=ok; agent_state=1 dòng; exact_events=3 dòng; world replay=PASS.
+Đây là bản chụp giữ lại để xem. Code dự án và hành vi tạo/dọn file tạm của demo gốc không bị sửa.

@@ -1,0 +1,231 @@
+{
+  "agent_state": [
+    {
+      "owner_id": "persistent-demo-owner",
+      "agent_id": "alice",
+      "state_json": {
+        "seq": 3,
+        "receipt": "72a51848c62e861478ed1206f10d330cee232c456d21395290aaed756d71d049",
+        "n": 3,
+        "successes": 2,
+        "fast_s": 1.65,
+        "fast_w": 2.0725,
+        "slow_s": 1.96,
+        "slow_w": 2.8815999999999997,
+        "loss_static": 0.2643111111111111,
+        "loss_fast": 0.2606593940910323,
+        "loss_slow": 0.2639091113151719,
+        "selected": "static"
+      }
+    },
+    {
+      "owner_id": "persistent-demo-owner",
+      "agent_id": "bob",
+      "state_json": {
+        "seq": 3,
+        "receipt": "7e569419093f996cd3f12cd2454e35279afbeebd0957608b086636e98eb0afa1",
+        "n": 3,
+        "successes": 2,
+        "fast_s": 1.4225,
+        "fast_w": 2.0725,
+        "slow_s": 1.9216,
+        "slow_w": 2.8815999999999997,
+        "loss_static": 0.2643111111111111,
+        "loss_fast": 0.2683306269677446,
+        "loss_slow": 0.26471719212325273,
+        "selected": "static"
+      }
+    }
+  ],
+  "exact_events": [
+    {
+      "owner_id": "persistent-demo-owner",
+      "agent_id": "alice",
+      "seq": 1,
+      "event_id": "persistent-feedback-0-alice",
+      "provenance": "simulated",
+      "event_type": "persistent_simulated_feedback",
+      "payload": {
+        "action": {
+          "actor": "alice",
+          "amount": 1,
+          "kind": "transfer",
+          "principal": "persistent-demo-owner",
+          "request_id": "persistent-0-alice",
+          "target": "bob",
+          "tick": 0
+        },
+        "outcome": 0,
+        "provenance": "SIMULATED",
+        "schema": "openworld.persistent-agent-demo.v1",
+        "world_after": "8c58414a88d207c7b4c7ef636b26862b49d9ccac2852d18ea9747f94c2dfc7d3",
+        "world_before": "993051da6d7ac7ae68b37eec1c790264a4b2aa451c3bcf91ffb8ff615050030f"
+      },
+      "payload_hash": "43a272d6ddf2fcff5779303020537e493e2364acfca9c64f8d24e03b3c8025b7"
+    },
+    {
+      "owner_id": "persistent-demo-owner",
+      "agent_id": "bob",
+      "seq": 1,
+      "event_id": "persistent-feedback-1-bob",
+      "provenance": "simulated",
+      "event_type": "persistent_simulated_feedback",
+      "payload": {
+        "action": {
+          "actor": "bob",
+          "amount": 1,
+          "kind": "transfer",
+          "principal": "persistent-demo-owner",
+          "request_id": "persistent-1-bob",
+          "target": "alice",
+          "tick": 1
+        },
+        "outcome": 1,
+        "provenance": "SIMULATED",
+        "schema": "openworld.persistent-agent-demo.v1",
+        "world_after": "5adbc366dbd070b8c635274dab65c4dee099e086490afb32fbf06d240bb40590",
+        "world_before": "8c58414a88d207c7b4c7ef636b26862b49d9ccac2852d18ea9747f94c2dfc7d3"
+      },
+      "payload_hash": "3ff6718ccd484ea0543fda2dbe3c65e4581ed6a6fd7936f145c2de35ecfb464c"
+    },
+    {
+      "owner_id": "persistent-demo-owner",
+      "agent_id": "alice",
+      "seq": 2,
+      "event_id": "persistent-feedback-2-alice",
+      "provenance": "simulated",
+      "event_type": "persistent_simulated_feedback",
+      "payload": {
+        "action": {
+          "actor": "alice",
+          "amount": 0,
+          "kind": "signal",
+          "principal": "persistent-demo-owner",
+          "request_id": "persistent-2-alice",
+          "target": "bob",
+          "tick": 2
+        },
+        "outcome": 1,
+        "provenance": "SIMULATED",
+        "schema": "openworld.persistent-agent-demo.v1",
+        "world_after": "c1fe9800e2f055e61cca97a7876d145c5062b618f34e2c67e1abc8db318234d4",
+        "world_before": "5adbc366dbd070b8c635274dab65c4dee099e086490afb32fbf06d240bb40590"
+      },
+      "payload_hash": "de02323b1358c71bce1a9bb1c5f063a49e1fd67bd09127f6332c0cc22d94c380"
+    },
+    {
+      "owner_id": "persistent-demo-owner",
+      "agent_id": "bob",
+      "seq": 2,
+      "event_id": "persistent-feedback-3-bob",
+      "provenance": "simulated",
+      "event_type": "persistent_simulated_feedback",
+      "payload": {
+        "action": {
+          "actor": "bob",
+          "amount": 1,
+          "kind": "transfer",
+          "principal": "persistent-demo-owner",
+          "request_id": "persistent-3-bob",
+          "target": "alice",
+          "tick": 3
+        },
+        "outcome": 0,
+        "provenance": "SIMULATED",
+        "schema": "openworld.persistent-agent-demo.v1",
+        "world_after": "884f3f3fdea0dee0d0440d293c0c8c88307d19c833384ed337382d50a4bd8c01",
+        "world_before": "c1fe9800e2f055e61cca97a7876d145c5062b618f34e2c67e1abc8db318234d4"
+      },
+      "payload_hash": "fa899880650ed4330d1ab6fc4760fd64ebff9aa5373e0e5bdaad776013b00a81"
+    },
+    {
+      "owner_id": "persistent-demo-owner",
+      "agent_id": "alice",
+      "seq": 3,
+      "event_id": "persistent-feedback-4-alice",
+      "provenance": "simulated",
+      "event_type": "persistent_simulated_feedback",
+      "payload": {
+        "action": {
+          "actor": "alice",
+          "amount": 1,
+          "kind": "transfer",
+          "principal": "persistent-demo-owner",
+          "request_id": "persistent-4-alice",
+          "target": "bob",
+          "tick": 4
+        },
+        "outcome": 1,
+        "provenance": "SIMULATED",
+        "schema": "openworld.persistent-agent-demo.v1",
+        "world_after": "ccd7386057422dbadb44ab9f46091662a048f3deff1a8115b528f755c839dbc7",
+        "world_before": "884f3f3fdea0dee0d0440d293c0c8c88307d19c833384ed337382d50a4bd8c01"
+      },
+      "payload_hash": "5db8f415d8c71526f9dddbefb48bc031a5546287c35582a9c513bb45038129e0"
+    },
+    {
+      "owner_id": "persistent-demo-owner",
+      "agent_id": "bob",
+      "seq": 3,
+      "event_id": "persistent-feedback-5-bob",
+      "provenance": "simulated",
+      "event_type": "persistent_simulated_feedback",
+      "payload": {
+        "action": {
+          "actor": "bob",
+          "amount": 1,
+          "kind": "transfer",
+          "principal": "persistent-demo-owner",
+          "request_id": "persistent-5-bob",
+          "target": "alice",
+          "tick": 5
+        },
+        "outcome": 1,
+        "provenance": "SIMULATED",
+        "schema": "openworld.persistent-agent-demo.v1",
+        "world_after": "ac8476e2a6acec7da2759bcecad2cc3470430119886abdba89a7e15278fe5261",
+        "world_before": "ccd7386057422dbadb44ab9f46091662a048f3deff1a8115b528f755c839dbc7"
+      },
+      "payload_hash": "15a249c736c9bf5d771fe772b6bd84cf8b95d7369d0f6b6bc337b8387cd39b27"
+    }
+  ],
+  "persistent_demo_journal": [
+    {
+      "tick": 0,
+      "body": "{\"actor\":\"alice\",\"estimator\":\"static\",\"event_id\":\"persistent-feedback-0-alice\",\"payload\":\"{\\\"action\\\":{\\\"actor\\\":\\\"alice\\\",\\\"amount\\\":1,\\\"kind\\\":\\\"transfer\\\",\\\"principal\\\":\\\"persistent-demo-owner\\\",\\\"request_id\\\":\\\"persistent-0-alice\\\",\\\"target\\\":\\\"bob\\\",\\\"tick\\\":0},\\\"outcome\\\":0,\\\"provenance\\\":\\\"SIMULATED\\\",\\\"schema\\\":\\\"openworld.persistent-agent-demo.v1\\\",\\\"world_after\\\":\\\"8c58414a88d207c7b4c7ef636b26862b49d9ccac2852d18ea9747f94c2dfc7d3\\\",\\\"world_before\\\":\\\"993051da6d7ac7ae68b37eec1c790264a4b2aa451c3bcf91ffb8ff615050030f\\\"}\",\"prediction\":0.5,\"previous_record_hash\":\"GENESIS\",\"sequence\":1,\"tick\":0}",
+      "body_hash": "d776bb85a183da64aac74c7c57358a14fa4e8c8b259610955c920a528d44ead7"
+    },
+    {
+      "tick": 1,
+      "body": "{\"actor\":\"bob\",\"estimator\":\"static\",\"event_id\":\"persistent-feedback-1-bob\",\"payload\":\"{\\\"action\\\":{\\\"actor\\\":\\\"bob\\\",\\\"amount\\\":1,\\\"kind\\\":\\\"transfer\\\",\\\"principal\\\":\\\"persistent-demo-owner\\\",\\\"request_id\\\":\\\"persistent-1-bob\\\",\\\"target\\\":\\\"alice\\\",\\\"tick\\\":1},\\\"outcome\\\":1,\\\"provenance\\\":\\\"SIMULATED\\\",\\\"schema\\\":\\\"openworld.persistent-agent-demo.v1\\\",\\\"world_after\\\":\\\"5adbc366dbd070b8c635274dab65c4dee099e086490afb32fbf06d240bb40590\\\",\\\"world_before\\\":\\\"8c58414a88d207c7b4c7ef636b26862b49d9ccac2852d18ea9747f94c2dfc7d3\\\"}\",\"prediction\":0.5,\"previous_record_hash\":\"d776bb85a183da64aac74c7c57358a14fa4e8c8b259610955c920a528d44ead7\",\"sequence\":1,\"tick\":1}",
+      "body_hash": "a7cbe4d5dcf1b9bc1b42cd85392105be762b8f25a5142e07b45e678b51522094"
+    },
+    {
+      "tick": 2,
+      "body": "{\"actor\":\"alice\",\"estimator\":\"static\",\"event_id\":\"persistent-feedback-2-alice\",\"payload\":\"{\\\"action\\\":{\\\"actor\\\":\\\"alice\\\",\\\"amount\\\":0,\\\"kind\\\":\\\"signal\\\",\\\"principal\\\":\\\"persistent-demo-owner\\\",\\\"request_id\\\":\\\"persistent-2-alice\\\",\\\"target\\\":\\\"bob\\\",\\\"tick\\\":2},\\\"outcome\\\":1,\\\"provenance\\\":\\\"SIMULATED\\\",\\\"schema\\\":\\\"openworld.persistent-agent-demo.v1\\\",\\\"world_after\\\":\\\"c1fe9800e2f055e61cca97a7876d145c5062b618f34e2c67e1abc8db318234d4\\\",\\\"world_before\\\":\\\"5adbc366dbd070b8c635274dab65c4dee099e086490afb32fbf06d240bb40590\\\"}\",\"prediction\":0.3333333333333333,\"previous_record_hash\":\"a7cbe4d5dcf1b9bc1b42cd85392105be762b8f25a5142e07b45e678b51522094\",\"sequence\":2,\"tick\":2}",
+      "body_hash": "5a5898d71b07756520c315032b1455fc6bc8f36770fa2d39fa39c820d71b9fe3"
+    },
+    {
+      "tick": 3,
+      "body": "{\"actor\":\"bob\",\"estimator\":\"static\",\"event_id\":\"persistent-feedback-3-bob\",\"payload\":\"{\\\"action\\\":{\\\"actor\\\":\\\"bob\\\",\\\"amount\\\":1,\\\"kind\\\":\\\"transfer\\\",\\\"principal\\\":\\\"persistent-demo-owner\\\",\\\"request_id\\\":\\\"persistent-3-bob\\\",\\\"target\\\":\\\"alice\\\",\\\"tick\\\":3},\\\"outcome\\\":0,\\\"provenance\\\":\\\"SIMULATED\\\",\\\"schema\\\":\\\"openworld.persistent-agent-demo.v1\\\",\\\"world_after\\\":\\\"884f3f3fdea0dee0d0440d293c0c8c88307d19c833384ed337382d50a4bd8c01\\\",\\\"world_before\\\":\\\"c1fe9800e2f055e61cca97a7876d145c5062b618f34e2c67e1abc8db318234d4\\\"}\",\"prediction\":0.6666666666666666,\"previous_record_hash\":\"5a5898d71b07756520c315032b1455fc6bc8f36770fa2d39fa39c820d71b9fe3\",\"sequence\":2,\"tick\":3}",
+      "body_hash": "7004fd066abbcbfa4b824744d521c58ab82a08f0df8436c2cd91f970d27178cd"
+    },
+    {
+      "tick": 4,
+      "body": "{\"actor\":\"alice\",\"estimator\":\"static\",\"event_id\":\"persistent-feedback-4-alice\",\"payload\":\"{\\\"action\\\":{\\\"actor\\\":\\\"alice\\\",\\\"amount\\\":1,\\\"kind\\\":\\\"transfer\\\",\\\"principal\\\":\\\"persistent-demo-owner\\\",\\\"request_id\\\":\\\"persistent-4-alice\\\",\\\"target\\\":\\\"bob\\\",\\\"tick\\\":4},\\\"outcome\\\":1,\\\"provenance\\\":\\\"SIMULATED\\\",\\\"schema\\\":\\\"openworld.persistent-agent-demo.v1\\\",\\\"world_after\\\":\\\"ccd7386057422dbadb44ab9f46091662a048f3deff1a8115b528f755c839dbc7\\\",\\\"world_before\\\":\\\"884f3f3fdea0dee0d0440d293c0c8c88307d19c833384ed337382d50a4bd8c01\\\"}\",\"prediction\":0.5,\"previous_record_hash\":\"7004fd066abbcbfa4b824744d521c58ab82a08f0df8436c2cd91f970d27178cd\",\"sequence\":3,\"tick\":4}",
+      "body_hash": "1a3df82eb32900807ea68a54198c18d1c61235a1c8b26c9d3ac6728bbda2528e"
+    },
+    {
+      "tick": 5,
+      "body": "{\"actor\":\"bob\",\"estimator\":\"static\",\"event_id\":\"persistent-feedback-5-bob\",\"payload\":\"{\\\"action\\\":{\\\"actor\\\":\\\"bob\\\",\\\"amount\\\":1,\\\"kind\\\":\\\"transfer\\\",\\\"principal\\\":\\\"persistent-demo-owner\\\",\\\"request_id\\\":\\\"persistent-5-bob\\\",\\\"target\\\":\\\"alice\\\",\\\"tick\\\":5},\\\"outcome\\\":1,\\\"provenance\\\":\\\"SIMULATED\\\",\\\"schema\\\":\\\"openworld.persistent-agent-demo.v1\\\",\\\"world_after\\\":\\\"ac8476e2a6acec7da2759bcecad2cc3470430119886abdba89a7e15278fe5261\\\",\\\"world_before\\\":\\\"ccd7386057422dbadb44ab9f46091662a048f3deff1a8115b528f755c839dbc7\\\"}\",\"prediction\":0.5,\"previous_record_hash\":\"1a3df82eb32900807ea68a54198c18d1c61235a1c8b26c9d3ac6728bbda2528e\",\"sequence\":3,\"tick\":5}",
+      "body_hash": "cdb2489cb39966b4645838af5341fad776488cdffa2c7d98d186ea274fe72bdd"
+    }
+  ],
+  "persistent_demo_meta": [
+    {
+      "id": 1,
+      "config": "{\"agents\":[\"alice\",\"bob\"],\"feedback\":[0,1,1],\"format\":\"openworld.persistent-agent-demo.v1\",\"genesis\":\"993051da6d7ac7ae68b37eec1c790264a4b2aa451c3bcf91ffb8ff615050030f\",\"owner\":\"persistent-demo-owner\"}",
+      "config_hash": "197361676be584697edc811ec9aa98476303e264d828ce3e4b4f4ba7aca3835c"
+    }
+  ]
+}

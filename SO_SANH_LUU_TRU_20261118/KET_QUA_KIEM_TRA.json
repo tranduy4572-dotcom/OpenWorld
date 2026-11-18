@@ -1,0 +1,140 @@
+{
+  "repo": "D:\\AIagent _openworld\\OpenWorld-main_p\\OpenWorld-main",
+  "artifacts": "D:\\AIagent _openworld\\SO_SANH_LUU_TRU_20261118",
+  "experiments": {
+    "persistent": {
+      "database": "D:\\AIagent _openworld\\SO_SANH_LUU_TRU_20261118\\persistent.sqlite3",
+      "run_1": {
+        "tick": 3,
+        "balances": {
+          "alice": 3,
+          "bob": 3
+        },
+        "memory": {
+          "alice": {
+            "estimator": "static",
+            "observations": 2,
+            "prediction": 0.5,
+            "prediction_provenance": "INFERRED",
+            "sequence": 2,
+            "successes": 1
+          },
+          "bob": {
+            "estimator": "static",
+            "observations": 1,
+            "prediction": 0.6666666666666666,
+            "prediction_provenance": "INFERRED",
+            "sequence": 1,
+            "successes": 1
+          }
+        },
+        "exact_events": 3
+      },
+      "run_2": {
+        "tick": 6,
+        "balances": {
+          "alice": 4,
+          "bob": 2
+        },
+        "memory": {
+          "alice": {
+            "estimator": "static",
+            "observations": 3,
+            "prediction": 0.6,
+            "prediction_provenance": "INFERRED",
+            "sequence": 3,
+            "successes": 2
+          },
+          "bob": {
+            "estimator": "static",
+            "observations": 3,
+            "prediction": 0.6,
+            "prediction_provenance": "INFERRED",
+            "sequence": 3,
+            "successes": 2
+          }
+        },
+        "exact_events": 6
+      },
+      "status_added_actions": false,
+      "table_rows": {
+        "agent_state": 2,
+        "exact_events": 6,
+        "persistent_demo_journal": 6,
+        "persistent_demo_meta": 1
+      },
+      "integrity_check": "ok"
+    },
+    "durable": {
+      "database": "D:\\AIagent _openworld\\SO_SANH_LUU_TRU_20261118\\durable.sqlite3",
+      "run_1": {
+        "round": 3,
+        "balances": {
+          "A": 8,
+          "B": 0
+        },
+        "memory": {
+          "A": {
+            "estimator": "static",
+            "observations": 1,
+            "prediction": 0.6666666666666666,
+            "prediction_provenance": "INFERRED",
+            "sequence": 1,
+            "successes": 1
+          },
+          "B": {
+            "estimator": "static",
+            "observations": 3,
+            "prediction": 0.8,
+            "prediction_provenance": "INFERRED",
+            "sequence": 3,
+            "successes": 3
+          }
+        },
+        "exact_events": 4
+      },
+      "run_2": {
+        "round": 6,
+        "balances": {
+          "A": 8,
+          "B": 0
+        },
+        "memory": {
+          "A": {
+            "estimator": "static",
+            "observations": 4,
+            "prediction": 0.8333333333333334,
+            "prediction_provenance": "INFERRED",
+            "sequence": 4,
+            "successes": 4
+          },
+          "B": {
+            "estimator": "static",
+            "observations": 6,
+            "prediction": 0.875,
+            "prediction_provenance": "INFERRED",
+            "sequence": 6,
+            "successes": 6
+          }
+        },
+        "exact_events": 10
+      },
+      "status_added_actions": false,
+      "table_rows": {
+        "agent_state": 2,
+        "durable_pair_journal": 6,
+        "durable_pair_meta": 1,
+        "exact_events": 10
+      },
+      "integrity_check": "ok"
+    }
+  },
+  "comparison": {
+    "old_files": 178,
+    "new_files": 218,
+    "added": 67,
+    "removed": 27,
+    "changed": 30,
+    "unchanged": 121
+  }
+}

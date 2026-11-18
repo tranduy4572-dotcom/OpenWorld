@@ -1,0 +1,72 @@
+﻿CÁC BẢNG THẬT TRONG persistent.sqlite3
+Đã chạy hai lần, mỗi lần thêm 3 bước/vòng. Ngày kiểm tra: 18/11/2026.
+Các cột ở bảng rút gọn được tách từ JSON trong cột thật để dễ đọc.
+
+1. persistent_demo_meta
+1 dòng cấu hình, nội dung cột config:
+{
+  "agents": [
+    "alice",
+    "bob"
+  ],
+  "feedback": [
+    0,
+    1,
+    1
+  ],
+  "format": "openworld.persistent-agent-demo.v1",
+  "genesis": "993051da6d7ac7ae68b37eec1c790264a4b2aa451c3bcf91ffb8ff615050030f",
+  "owner": "persistent-demo-owner"
+}
+
+2. persistent_demo_journal
+tick | người gửi | người nhận | hành động | số lượng | phản hồi
+0 | alice | bob | transfer | 1 | 0
+1 | bob | alice | transfer | 1 | 1
+2 | alice | bob | signal | 0 | 1
+3 | bob | alice | transfer | 1 | 0
+4 | alice | bob | transfer | 1 | 1
+5 | bob | alice | transfer | 1 | 1
+
+3. agent_state
+agent | số phản hồi n | số phản hồi 1 successes | thứ tự seq | dự đoán hiện tại
+alice | 3 | 2 | 3 | 0.6000
+bob | 3 | 2 | 3 | 0.6000
+
+4. exact_events
+agent | seq | loại sự kiện | kết quả/quan sát | nguồn gốc
+alice | 1 | persistent_simulated_feedback | action=transfer, outcome=0 | simulated
+bob | 1 | persistent_simulated_feedback | action=transfer, outcome=1 | simulated
+alice | 2 | persistent_simulated_feedback | action=signal, outcome=1 | simulated
+bob | 2 | persistent_simulated_feedback | action=transfer, outcome=0 | simulated
+alice | 3 | persistent_simulated_feedback | action=transfer, outcome=1 | simulated
+bob | 3 | persistent_simulated_feedback | action=transfer, outcome=1 | simulated
+
+CẤU TRÚC SQL THẬT:
+
+CREATE TABLE agent_state (
+                owner_id TEXT NOT NULL,
+                agent_id TEXT NOT NULL,
+                state_json TEXT NOT NULL,
+                PRIMARY KEY (owner_id, agent_id)
+            );
+
+CREATE TABLE exact_events (
+                owner_id TEXT NOT NULL,
+                agent_id TEXT NOT NULL,
+                seq INTEGER NOT NULL,
+                event_id TEXT NOT NULL UNIQUE,
+                provenance TEXT NOT NULL,
+                event_type TEXT NOT NULL,
+                payload BLOB NOT NULL,
+                payload_hash TEXT NOT NULL,
+                PRIMARY KEY (owner_id, agent_id, seq)
+            );
+
+CREATE TABLE persistent_demo_journal (tick INTEGER PRIMARY KEY, body TEXT NOT NULL, body_hash TEXT NOT NULL);
+
+CREATE TABLE persistent_demo_meta (id INTEGER PRIMARY KEY CHECK(id=1), config TEXT NOT NULL, config_hash TEXT NOT NULL);
+
+Dữ liệu đủ tất cả cột: persistent-tables.json
+Đầu ra đầy đủ kèm lịch sử: persistent-3.json
+Bản SQLite được giữ lại để bạn xem; không phải file tự xóa của demo cũ.

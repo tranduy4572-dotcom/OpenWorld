@@ -1,0 +1,188 @@
+SO SÁNH PHẦN LƯU TRỮ GIỮA HAI FOLDER OPENWORLD
+Ngày kiểm tra trực tiếp: 18/11/2026
+
+Bản đã học: D:\AIagent _openworld\OpenWorld-main
+Bản _p:     D:\AIagent _openworld\OpenWorld-main_p\OpenWorld-main
+Chú ý: trong OpenWorld-main_p còn một tầng OpenWorld-main nữa.
+
+1. KHÁC BIỆT QUAN TRỌNG NHẤT
+
+Demo cũ r0_agent_cycle.py tạo một thế giới trong RAM và bộ nhớ SQLite tạm.
+Kết thúc bình thường sẽ dọn SQLite tạm. Chạy lại bắt đầu một bài thử mới.
+
+Bản _p có thêm ví dụ lưu bền: chỉ định đường dẫn SQLite bằng --db; kết thúc
+Python thì file vẫn còn. Chạy lại với cùng đường dẫn sẽ kiểm tra và dựng
+lại thế giới đã lưu, rồi tiếp tục bước sau. Không phải bắt đầu lại từ đầu.
+
+Thế giới đang hoạt động vẫn là đối tượng trong RAM. Điểm mới là SQLite
+giữ đủ nhật ký chính xác để tái tạo trạng thái, gồm số dư, khi khởi động lại.
+Không phải giữ nguyên RAM hoặc để agent chạy ngầm khi Python đã tắt.
+
+2. KHÔNG CHỈ CÓ MỘT DEMO MỚI: PHÂN BIỆT BA FILE
+
+examples/two_agents.py:
+- Hai agent A/B trao đổi theo kịch bản: A cho, B trả lại hoặc giữ.
+- Thử thông báo bị trễ/mất và đối chiếu biên nhận.
+- Không có cơ chế tiếp tục một phiên SQLite như hai ví dụ phía dưới.
+- --out có thể xuất báo cáo JSON; xuất báo cáo không đồng nghĩa có bộ nhớ
+  SQLite dùng để tiếp tục thế giới ở lần chạy sau.
+
+examples/persistent_agents.py:
+- Gần nhất với bài Alice/Bob ta đã học: ban đầu mỗi bên có 3 tài nguyên.
+- Cả Alice và Bob luân phiên chọn hành động, mỗi bên có thống kê riêng.
+- Dự đoán >= 50% và còn ít nhất 1 tài nguyên thì chuyển 1; nếu không gửi tín hiệu.
+- Vẫn dùng phản hồi cố định lặp 0,1,1; chưa lấy phản hồi từ việc Bob trả hay giữ.
+- Thêm lưu nhật ký, cấu hình và bộ nhớ; có thể chạy tiếp qua nhiều lần mở Python.
+
+examples/durable_two_agents.py:
+- Bài thử khác, tên agent là A/B: A bắt đầu với 8 tài nguyên, B với 0.
+- Mỗi vòng có hai pha: A có gửi không, rồi B có trả lại không.
+- B thực hiện luật cooperative/hostile/recovery của kịch bản.
+- Phản hồi của A lấy từ pha trả/giữ đã hoàn tất trong mô phỏng, không còn
+  là chuỗi 0,1,1 cấp độc lập như persistent_agents.py.
+- A mặc định dùng dự đoán để cân nhắc gửi, cùng giới hạn rủi ro và số dư.
+- B có bộ nhớ dự đoán có nhận quà không; quyết định trả/giữ của B vẫn theo
+  luật kịch bản, chưa phải hai policy cùng tự học.
+- Lưu cả hạn mức rủi ro, biên nhận, hàng đợi thông báo và bộ nhớ để chạy tiếp.
+- Vẫn là mô phỏng cùng chủ sở hữu, không gọi LLM hoặc API bên ngoài.
+
+3. CÁC BẢNG SQLITE THAY ĐỔI THẾ NÀO?
+
+Demo R0 cũ: 2 bảng trong SQLite tạm
+- exact_events: bản ghi phản hồi, hành động và mã đối chiếu trạng thái.
+- agent_state: thống kê dự đoán của Alice trong kịch bản cũ.
+Số dư thế giới chỉ được giữ trong RAM của demo; riêng SQLite bộ nhớ này
+không có nhật ký thế giới đầy đủ để tiếp tục phiên sau.
+
+Ví dụ persistent_agents.py: 4 bảng trong SQLite được giữ lại
+- persistent_demo_meta: định dạng, chủ sở hữu, tên agent, lịch phản hồi,
+  dấu đối chiếu trạng thái ban đầu.
+- persistent_demo_journal: nhật ký chính thức của từng bước, chứa hành động
+  đầy đủ, phản hồi, dự đoán và liên kết bản ghi trước.
+- exact_events: bản ghi bộ nhớ chính xác của từng agent.
+- agent_state: thống kê dự đoán riêng của Alice và Bob.
+Số dư được khôi phục bằng cách tính lại từ trạng thái đầu và hành động
+trong nhật ký; không cần một bảng balances riêng.
+
+Ví dụ durable_two_agents.py: cũng 4 bảng, nhưng nhật ký khác định dạng
+- durable_pair_meta: phiên bản và các thiết lập thí nghiệm đã cố định.
+- durable_pair_journal: mỗi bản ghi là cả một vòng hai pha, gồm lệnh, sự
+  kiện, quyết định, số dư cuối, hạn mức, thông báo và các quan sát bộ nhớ.
+- exact_events: bằng chứng bộ nhớ của A/B.
+- agent_state: thống kê dự đoán riêng của A/B.
+
+Hai loại SQLite trên có định dạng khác nhau. Chọn file DB riêng cho mỗi
+ví dụ. Không dùng file lab-memory.sqlite3 cũ làm DB của ví dụ mới: file đó
+không có các bảng nhật ký/cấu hình cần thiết, ví dụ mới sẽ từ chối.
+
+4. NẾU LƯU DỞ CHỪNG THÌ SAO?
+
+Cả hai ví dụ mới đều lưu nhật ký trước, rồi cập nhật HyperMemory bằng một
+giao dịch riêng. Cùng nằm trong một file không biến chúng thành một giao dịch.
+
+Hình dung: đã ghi hành động vào sổ chính nhưng chưa cập nhật bảng thống kê
+thì Python bị dừng. Lần mở sau, chương trình kiểm tra sổ chính và phần bộ
+nhớ đã có, rồi bổ sung bản ghi còn thiếu mà không đếm lại những bản đã lưu.
+Dữ liệu hiện có bị lệch hoặc hỏng sẽ bị từ chối, không tự đoán lại lịch sử.
+
+Đây là cơ chế phục hồi cho mô phỏng cục bộ. Các thử nghiệm thoát tiến trình
+không tự chứng nhận an toàn khi ổ đĩa hỏng, mất điện vật lý hoặc chạy dịch
+vụ thực tế. Một lần chạy ví dụ cũng không giải quyết mọi giới hạn bảo mật.
+
+5. NÊN ĐỌC FILE NÀO TRƯỚC? (đường dẫn tính từ bản _p)
+
+Để chỉ hiểu thay đổi lưu trữ, đọc theo thứ tự:
+1) docs/experiments/PERSISTENT-AGENT-SIMULATION.md
+   Giải thích bốn bảng, cách chạy tiếp và giới hạn. Đọc phần What is saved.
+2) examples/persistent_agents.py
+   AGENTS/FEEDBACK: hai agent và chuỗi phản hồi.
+   proposal: chọn ai hành động và dùng bộ nhớ của người đó.
+   _prepare: tạo bảng/cấu hình.
+   _restore: đọc lịch sử để dựng lại thế giới và kiểm tra/bù bộ nhớ.
+   step: chạy một bước, ghi nhật ký rồi cập nhật bộ nhớ.
+   status: in số dư, thống kê, lịch sử.
+   main: nhận --db, --steps, --status, --history.
+3) src/openworld_superkernel/hyper_memory_p1e.py
+   CREATE TABLE: cấu trúc hai bảng bộ nhớ.
+   predict: tính dự đoán từ thống kê.
+   apply_batch: ghi sự kiện và cập nhật thống kê trong một giao dịch.
+4) tests/test_persistent_agents.py
+   Xem các tình huống chạy lại, lỗi giữa chừng, dữ liệu bị sửa và gửi trùng.
+
+Sau khi đã hiểu phần trên mới đọc:
+5) docs/experiments/DURABLE-TWO-AGENT-RECEIPTS.md
+6) examples/durable_two_agents.py
+   RoundEngine.step: vòng A gửi/B trả và cách tạo phản hồi.
+   DurableTwoAgents.step: ghi toàn bộ vòng rồi cập nhật bộ nhớ.
+   _restore/_verify_and_project: kiểm tra nhật ký và phục hồi bộ nhớ.
+7) examples/two_agents.py
+   DonorAgent/RecipientAgent: luật gửi/trả và kiểm tra biên nhận.
+8) tests/test_durable_two_agents.py
+
+Chưa cần đọc hết benchmarks, research/runs hay toàn bộ tests để hiểu lưu trữ.
+Các log/báo cáo cũ là bằng chứng của lần chạy đã ghi, không phải bộ nhớ đang sống.
+
+6. KẾT QUẢ TÔI ĐÃ CHẠY LẠI TRONG PHIÊN NÀY
+
+Dùng các file DB mới riêng trong thư mục ghi chú này, không mở/sửa DB cũ.
+
+Persistent, lần 1 chạy thêm 3 bước:
+- Bắt đầu ở bước 0, kết thúc ở bước 3.
+- Alice 3/Bob 3; 3 bản ghi exact_events.
+- Bộ nhớ Alice có 2 phản hồi; Bob có 1 phản hồi.
+
+Đóng Python, persistent lần 2 chạy thêm 3 bước với cùng DB:
+- Bắt đầu từ bước 3, kết thúc ở bước 6.
+- Alice 4/Bob 2; 6 bản ghi exact_events.
+- Mỗi agent có 3 phản hồi, 2 phản hồi bằng 1 và dự đoán 60%.
+- Bảng: agent_state 2 dòng, exact_events 6 dòng,
+  persistent_demo_journal 6 dòng, persistent_demo_meta 1 dòng.
+
+Durable, chạy 3 vòng rồi đóng Python, chạy tiếp thêm 3 vòng:
+- Từ vòng 0 -> 3 -> 6, không khởi tạo lại.
+- Kịch bản mặc định cooperative: A 8/B 0 sau cả hai lần vì B trả tài nguyên.
+- Sau 6 vòng: A có 4 quan sát, B có 6 quan sát. Hai nhiệm vụ quan sát khác
+  nhau và thông báo của A có thể trễ/mất, nên không bắt buộc số lượng bằng nhau.
+- Bảng: agent_state 2 dòng, exact_events 10 dòng,
+  durable_pair_journal 6 dòng, durable_pair_meta 1 dòng.
+
+Cả hai DB: integrity_check=ok; replay đạt. Chạy --status --history không
+thêm bước/vòng hoặc đếm thêm phản hồi trong các file đã lưu đầy đủ này.
+
+Kiểm tra tập trung:
+- tests/test_persistent_agents.py: 14 tests, OK.
+- tests/test_durable_two_agents.py: 14 tests, OK.
+- Tổng 28 bài đạt. Không chạy toàn bộ bộ test của bản _p trong phiên này.
+
+File để xem ngay trong thư mục này:
+- persistent.sqlite3: DB sau 6 bước của ví dụ Alice/Bob.
+- durable.sqlite3: DB sau 6 vòng của ví dụ A/B.
+- XEM_BANG_PERSISTENT.txt và XEM_BANG_DURABLE.txt: bản xuất bảng để đọc.
+- persistent-1.json, persistent-2.json, persistent-3.json: đầu ra hai lần
+  chạy và lần xem trạng thái/lịch sử.
+- durable-1.json, durable-2.json, durable-3.json: đầu ra tương ứng.
+- KET_QUA_KIEM_TRA.json: kết quả kiểm tra tổng hợp.
+- test_persistent_agents.log và test_durable_two_agents.log: log test thật.
+
+7. BẢN _p KHÔNG PHẢI BẢN CŨ CHỈ CỘNG THÊM CHỨC NĂNG
+
+So sánh nội dung file, bỏ qua cache Python:
+- Bản cũ 178 file; bản _p 218 file.
+- 67 file thêm, 27 file không còn, 30 file cùng đường dẫn nhưng khác nội
+  dung, 121 file có nội dung giống nhau.
+- Bản _p không còn examples/r0_agent_cycle.py và module r0_cycle.py.
+- README của _p giới thiệu kho phân nhánh iamphan04/OpenWorld.
+- Các ghi chú trước đây bên ngoài hai repo mô tả bản OpenWorld-main cũ;
+  không áp dụng nguyên xi đường dẫn và hành vi cũ sang bản _p.
+
+Khác biệt thật trong schema HyperMemory dùng chung:
+- Bản cũ: mã sự kiện duy nhất theo cặp (owner_id, event_id).
+- Bản _p: event_id phải duy nhất trên toàn bảng.
+- Bản cũ có quy trình chuyển namespace và test liên quan; bản _p không
+  chứa các file đó. exact_event ở _p cũng xử lý truy vấn khác chủ bằng
+  PermissionError, còn bản cũ trả None cho cả thiếu ID và ID của chủ khác.
+Do đó không nên kết luận mọi phần của _p đều là bản nâng cấp của code cũ.
+Các ví dụ lưu bền là chức năng mới nhưng những phần khác có lịch sử khác.
+
+Xem DANH_SACH_FILE_THAY_DOI.txt hoặc FILE_DIFFERENCES.json để tra đầy đủ.
+Chỉ so sánh hai thư mục local; không đồng bộ, gộp hay thay đổi code nguồn.
