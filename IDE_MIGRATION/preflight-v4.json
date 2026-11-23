@@ -1,0 +1,11 @@
+﻿{
+    "Detail":  {
+                   "FullHashSeconds":  43.23,
+                   "Entries":  44237,
+                   "WarmCheckSeconds":  2.19,
+                   "HelperSHA256":  "87B9AC316AF6716F168BD0BA8F6354FC3EA66BFB2F33FF324889776FC9F0356B"
+               },
+    "Message":  "VS Code and immutable Codex files verified with SHA-256. Only changed files and volatile databases need hashing after close.",
+    "Stage":  "Passed",
+    "Updated":  "2026-11-22T22:14:43.5724561+07:00"
+}

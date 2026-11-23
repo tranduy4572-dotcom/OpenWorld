@@ -1,0 +1,6 @@
+﻿TÓM TẮT KẾT QUẢ TEST ĐÃ CHẠY NGÀY 23/11/2026
+Lệnh: python -B -m unittest discover -s gemini_world -p test_*.py -v
+Kết quả ghi nhận từ đầu ra công cụ trong phiên này: Ran 20 tests in 0.292s; OK; exit code 0.
+Đây là tóm tắt đầu ra đã ghi nhận, không phải toàn bộ raw log.
+Các test dùng Gemini giả lập/mocked HTTP, không gọi API thật.
+Có kiểm tra đường dẫn, giới hạn quyền, chờ phản hồi model lâu, lưu SQLite, tiếp tục phiên và từ chối hành động lạ.

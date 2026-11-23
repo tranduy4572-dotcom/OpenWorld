@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-23",
+  "connected_root": "D:\\AIagent _openworld\\OpenWorld-main",
+  "local_integration": "PASS",
+  "live_gemini_api": "NOT_RUN_NO_API_KEY",
+  "unit_tests": {
+    "command": "python -B -m unittest discover -s gemini_world -p test_*.py -v",
+    "tests": 20,
+    "result": "OK",
+    "evidence": "Recorded successful tool output in this session; see TEST_SUMMARY.txt"
+  },
+  "offline_run": {
+    "directory": "D:\\AIagent _openworld\\gemini_world\\runs\\validated_offline_20261123_20261123_052136_531064",
+    "tick": 4,
+    "balances": {
+      "alice": 1,
+      "bob": 2
+    },
+    "actions": [
+      "signal",
+      "transfer",
+      "signal",
+      "transfer"
+    ],
+    "source": "OFFLINE_RULES",
+    "replay": "PASS",
+    "tables": {
+      "world": {
+        "w3_checkpoint": 1
+      },
+      "memory": {
+        "agent_state": 2,
+        "exact_events": 4
+      }
+    }
+  },
+  "checks": {
+    "separate_process_resume": {
+      "tick": 2,
+      "balances": {
+        "alice": 2,
+        "bob": 1
+      },
+      "trace_records": 2
+    },
+    "root_independent_of_terminal_cwd": true,
+    "python_syntax": "PASS",
+    "html_embedded_trace_matches_execution": true,
+    "core_source_unchanged": {
+      "files_compared": 178,
+      "changed_files": []
+    }
+  }
+}

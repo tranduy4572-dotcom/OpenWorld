@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OpenWorld Clean — Gemini Agent Trace</title>
+<style>
+:root{color-scheme:dark;--bg:#0e1420;--panel:#172238;--border:#32405b;--ink:#f1f5ff;--muted:#a5b4ca;--accent:#80c6fd;--good:#86e2b1}
+*{box-sizing:border-box} body{background:radial-gradient(ellipse at top,#243a59 0,var(--bg) 52%);font:15px/1.55 system-ui,'Segoe UI',sans-serif;color:var(--ink);margin:0}
+main{max-width:1120px;margin:auto;padding:24px 16px 70px}h1{font-size:clamp(24px,3.8vw,36px);letter-spacing:-.03em;margin:0}
+h2{font-size:18px;margin:0 0 12px}p{color:var(--muted);margin:.35em 0}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.kicker{font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--accent)}.pill{padding:7px 11px;border:1px solid #486081;border-radius:20px;color:var(--accent);font-size:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;min-width:0}.world{display:grid;grid-template-columns:1fr 64px 1fr;gap:12px;align-items:center;margin:21px 0 14px}
+.agent{background:#1c2d46;border-radius:13px;border:1px solid #334a6c;padding:17px}.agent .label{font-size:16px;font-weight:750}.agent .num{font-size:34px;letter-spacing:-.04em;font-weight:800}
+.agent small{color:var(--muted)}.arrow{text-align:center;font-size:35px;color:var(--accent)}.stats{display:flex;flex-wrap:wrap;gap:9px;margin:16px 0}
+.stat{border:1px solid var(--border);border-radius:10px;padding:8px 13px;background:#152235;font-size:13px}.stat b{color:white}
+.stages{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-bottom:15px}
+.stage{border:1px solid var(--border);border-radius:10px;background:#21334f;padding:10px 5px;color:#daeaff;text-align:center;font-size:11px;line-height:1.35;cursor:pointer}.stage.active{outline:2px solid var(--accent);background:#355676}
+pre{max-height:350px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;margin:0;background:#0b1627;padding:13px;border:1px solid #2a405e;border-radius:10px;font-size:12px;color:#d8eafe}
+pre.prompt{font-size:11px;max-height:220px}button{border:0;border-radius:10px;padding:11px 14px;font:inherit;font-weight:650;background:#7ec8ff;color:#102033;cursor:pointer}button.secondary{background:#2c3e58;color:#ecf4ff}button:disabled{opacity:.4;cursor:default}
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:15px 0}.timeline{display:grid;gap:8px;margin:0;padding:0;list-style:none}.timeline li{padding:10px 12px;border-radius:9px;background:#1a2a42;border-left:3px solid #6b9dc7;cursor:pointer}.timeline li.active{border-left-color:var(--good);background:#25403e}.caption{color:var(--muted);font-size:12px}.error{background:#413321;border:1px solid #896a36;border-radius:9px;padding:12px;color:#fee0af}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.stages{grid-template-columns:repeat(3,minmax(0,1fr))}.world{grid-template-columns:1fr 28px 1fr;gap:6px}.agent{padding:12px}.arrow{font-size:22px}}
+</style></head><body><main>
+<div class="top"><div><div class="kicker">OPENWORLD CLEAN · TRACE VIEWER</div><h1>Agent hoạt động như thế nào?</h1><p>Xem dữ liệu đã chạy thật trong mã W3 của OpenWorld Clean, từng file và từng thay đổi.</p></div><div class="pill">Dữ liệu mô phỏng · SIMULATED</div></div>
+<div class="world"><section class="agent"><div class="label">🤖 Alice</div><div class="num" id="alice">—</div><small>đơn vị tài nguyên</small></section><div class="arrow">↔</div><section class="agent"><div class="label">🤖 Bob</div><div class="num" id="bob">—</div><small id="goalLabel">Mục tiêu: đạt 2 đơn vị</small></section></div>
+<div class="stats"><div class="stat">Tick <b id="tick">—</b></div><div class="stat">Agent đang xét <b id="actor">—</b></div><div class="stat">Nguồn quyết định <b id="source">—</b></div><div class="stat">Replay <b id="replay">—</b></div></div>
+<div class="grid"><section class="panel"><h2>Đường đi qua từng file</h2>
+<div class="stages" id="stages"></div><h2 id="stageTitle">Dữ liệu</h2><p id="stageDesc"></p><pre id="stageJson"></pre></section>
+<section class="panel"><h2>Nhật ký các lượt</h2><ol class="timeline" id="timeline"></ol><div class="controls"><button id="prev" class="secondary">← Lượt trước</button><button id="next">Lượt tiếp →</button><button id="play" class="secondary">▶ Phát tự động</button></div><h2>Đầu vào gửi cho bộ não</h2><pre class="prompt" id="prompt"></pre></section></div>
+<p class="caption" style="margin-top:15px">Đây là bản xuất chỉ đọc từ lần chạy script. Các đề xuất LLM không phải quyền thực thi. Nhật ký và hai SQLite không phải một giao dịch nguyên tử chung. Thông tin ngoài đời không được xác minh bằng replay.</p>
+</main>
+<script id="trace" type="application/json">__OPENWORLD_TRACE_JSON__</script>
+<script>
+const trace=JSON.parse(document.getElementById('trace').textContent);
+const $=id=>document.getElementById(id);
+const goal=trace.length ? trace[0].observation.public_goal_notice.target : 2;
+$('goalLabel').textContent='Mục tiêu: đạt '+goal+' đơn vị';
+const stages=[
+ ['Quan sát','src/openworld_superkernel/world_guard.py → src/openworld_superkernel/world_fixture.py','Đây là trạng thái được Gateway cho phép Agent thấy. Bảng thông báo mục tiêu là dữ liệu công khai do host thêm vào.',r=>r.observation],
+ ['Bộ nhớ','src/openworld_superkernel/hyper_memory_p1e.py','Các con số của riêng Agent trước khi quyết định. Đây chưa phải cuộc trò chuyện với LLM.',r=>r.memory_before],
+ ['Đề xuất','gemini_world/gemini_api.py','Xem nguồn quyết định: GEMINI_API là dịch vụ thật; OFFLINE_RULES là luật cục bộ. Đề xuất chưa làm đổi tài nguyên.',r=>({source:r.source,model:r.model,proposal:r.proposal})],
+ ['Kiểm quyền','src/openworld_superkernel/world_guard.py','Chương trình chỉ nhận hành động được cho phép; quyền do host cấp, không lấy từ lời nói của LLM.',r=>({allowed_action:r.validated_action,actor:r.actor,provenance:r.provenance})],
+ ['Đổi thế giới','src/openworld_superkernel/world_fixture.py','Đối chiếu trạng thái trước và sau một tick được chấp nhận.',r=>({before:r.world_before,after:r.world_after,replay:r.replay})],
+ ['Ghi và lưu','src/openworld_superkernel/hyper_memory_p1e.py → src/openworld_superkernel/world_persistence.py','Ghi thống kê bộ nhớ, sự kiện và checkpoint W3 (hai cơ chế lưu độc lập).',r=>({feedback:r.feedback,event_id:r.memory_event_id,before:r.memory_before,after:r.memory_after})],
+];
+let i=0,j=0,timer=null;
+function render(){
+ if(!trace.length){$('stageTitle').textContent='Chưa có dữ liệu';$('stageJson').textContent='Chạy demo để có nhật ký';return}
+ const r=trace[i];$('alice').textContent=r.world_after.balances.alice;$('bob').textContent=r.world_after.balances.bob;
+ $('tick').textContent=r.tick;$('actor').textContent=r.actor;$('source').textContent=r.source+(r.model?' ('+r.model+')':'');$('replay').textContent=r.replay;
+ $('stages').replaceChildren();stages.forEach((s,k)=>{const b=document.createElement('button');b.className='stage'+(j===k?' active':'');b.textContent=(k+1)+'. '+s[0];b.onclick=()=>{j=k;render()};$('stages').appendChild(b)});
+ const s=stages[j];$('stageTitle').textContent=s[0]+' — '+s[1];$('stageDesc').textContent=s[2];$('stageJson').textContent=JSON.stringify(s[3](r),null,2);
+ $('prompt').textContent=r.prompt;
+ $('timeline').replaceChildren();trace.forEach((t,k)=>{const e=document.createElement('li');e.className=k===i?'active':'';e.textContent='Tick '+t.tick+' · '+t.actor.toUpperCase()+' · '+t.validated_action+' · Bob '+t.world_after.balances.bob+'/'+goal;e.onclick=()=>{i=k;render()};$('timeline').appendChild(e)});
+ $('prev').disabled=i===0;$('next').disabled=i===trace.length-1;
+}
+$('prev').onclick=()=>{i=Math.max(0,i-1);render()};$('next').onclick=()=>{i=Math.min(trace.length-1,i+1);render()};
+$('play').onclick=()=>{if(timer){clearInterval(timer);timer=null;$('play').textContent='▶ Phát tự động';return}i=0;render();timer=setInterval(()=>{if(i>=trace.length-1){clearInterval(timer);timer=null;$('play').textContent='▶ Phát tự động';return}i++;render()},1200);$('play').textContent='Ⅱ Tạm dừng'};
+render();
+</script></body></html>

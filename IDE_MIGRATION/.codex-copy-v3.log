@@ -1,0 +1,29 @@
+
+-------------------------------------------------------------------------------
+   ROBOCOPY     ::     Robust File Copy for Windows                              
+-------------------------------------------------------------------------------
+
+  Started : Sunday, November 22, 2026 10:16:25 PM
+   Source : C:\Users\lenovo\.codex\
+     Dest : D:\IDE\.codex\
+
+    Files : *.*
+	    
+  Options : *.* /NDL /NFL /S /E /DCOPY:DAT /COPY:DAT /PURGE /NP /MT:4 /R:1 /W:1 
+
+------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------
+
+               Total    Copied   Skipped  Mismatch    FAILED    Extras
+    Dirs :      3254      3254      3254         0         0         0
+   Files :      8283         8      8275         0         0         0
+   Bytes :   1.213 g  148.22 m   1.068 g         0         0         0
+   Times :   0:00:00   0:00:00                       0:00:00   0:00:00
+
+
+   Speed :           1,828,570,058 Bytes/sec.
+   Speed :             104,631.617 MegaBytes/min.
+   Ended : Sunday, November 22, 2026 10:16:25 PM
+

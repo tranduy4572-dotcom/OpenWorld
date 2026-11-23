@@ -1,0 +1,6 @@
+﻿DA HOAN TAT.
+C:\Users\lenovo\.vscode -> D:\IDE\.vscode
+C:\Users\lenovo\.codex -> D:\IDE\.codex
+Da giai phong tren o C: 4.32 GB.
+Hai duong dan tren C chi la lien ket. Du lieu that nam tren D.
+Da kiem tra SHA-256 va xoa ban goc tren C.

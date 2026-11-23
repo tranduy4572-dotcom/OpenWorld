@@ -1,0 +1,21 @@
+﻿{
+    "Detail":  {
+                   "HelperSHA256":  "87B9AC316AF6716F168BD0BA8F6354FC3EA66BFB2F33FF324889776FC9F0356B",
+                   "FreedBytes":  4636499968,
+                   "Mappings":  [
+                                    {
+                                        "Target":  "D:\\IDE\\.vscode",
+                                        "Backup":  "C:\\Users\\lenovo\\.vscode.before-move-20261122",
+                                        "Source":  "C:\\Users\\lenovo\\.vscode"
+                                    },
+                                    {
+                                        "Target":  "D:\\IDE\\.codex",
+                                        "Backup":  "C:\\Users\\lenovo\\.codex.before-move-20261122",
+                                        "Source":  "C:\\Users\\lenovo\\.codex"
+                                    }
+                                ]
+               },
+    "Message":  "Both original folders have been deleted from C; their paths are junctions to D:\\IDE.",
+    "Stage":  "Complete",
+    "Updated":  "2026-11-22T22:17:40.7429642+07:00"
+}

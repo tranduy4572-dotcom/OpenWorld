@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-23",
+  "root_files_before": 25,
+  "root_files_after": 6,
+  "bat_before": 5,
+  "bat_after": 1,
+  "folder_bytes_before": 347709,
+  "folder_bytes_after": 330414,
+  "env_unchanged": true,
+  "core_files_unchanged": 178,
+  "saved_run_files_preserved": 18,
+  "saved_run_bytes_preserved": 231276,
+  "launcher_actual_bat_exit_test": "PASS",
+  "offline_cli_from_different_cwd": {
+    "balances": {
+      "alice": 1,
+      "bob": 2
+    },
+    "ticks": 4,
+    "replay": "PASS"
+  },
+  "tests": {
+    "count": 25,
+    "result": "OK",
+    "command": "python -B -m unittest discover -s gemini_world/tests -p test_*.py -v",
+    "log": "cleanup-tests.log"
+  },
+  "deleted_files": [
+    "CHAY_GEMINI.bat",
+    "CHAY_OFFLINE.bat",
+    "XEM_MODELS.bat",
+    "KIEM_TRA_DU_AN.bat",
+    "CHAY_TEST.bat",
+    "XEM_KET_QUA_OFFLINE.html"
+  ],
+  "deleted_html_reason": "Byte-identical copy of the original report retained under runs/",
+  "live_gemini_api_called": false
+}

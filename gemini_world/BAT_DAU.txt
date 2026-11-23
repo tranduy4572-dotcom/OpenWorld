@@ -1,0 +1,38 @@
+GEMINI + OPENWORLD: BẮT ĐẦU TẠI ĐÂY
+
+Chỉ cần mở CHAY.bat trong thư mục này.
+Gõ một số rồi nhấn Enter:
+
+1 - Chạy Gemini thật: cần key/model trong .env.
+2 - Chạy demo offline: không gọi API, không cần key.
+3 - Xem model Gemini mà key truy cập được.
+4 - Kiểm tra kết nối OpenWorld.
+5 - Chạy test cục bộ; Gemini được giả lập trong test.
+6 - Mở báo cáo HTML mới nhất bằng trình duyệt.
+0 - Thoát.
+
+Trong chế độ Gemini, đề xuất còn được hỏi xác nhận trước khi áp dụng.
+Chạy xong một tác vụ sẽ quay về menu.
+
+FILE CỦA BẠN
+.env: nơi điền GEMINI_API_KEY và GEMINI_MODEL; giữ nguyên sau khi dọn.
+openworld_config.json: chọn core tại ../OpenWorld-main.
+runs/: dữ liệu các lần chạy. SQLite, trace và báo cáo đều nằm ở đây.
+
+CÁC THƯ MỤC CÒN LẠI
+app/: code thực thi; thường không cần mở nếu chỉ muốn sử dụng.
+tests/: bài kiểm tra phần mềm, không phải bộ nhớ của AI.
+docs/: tài liệu; docs/kiem_tra/ có báo cáo kiểm tra kỹ thuật.
+
+Năm file .bat cũ đã gộp thành CHAY.bat.
+Bản HTML trùng ở gốc được bỏ; báo cáo gốc vẫn nằm trong runs/ và mở bằng menu 6.
+Toàn bộ lịch sử SQLite được giữ lại. Tạo --fresh sẽ sinh một bài thử mới.
+
+NẾU DÙNG TERMINAL POWERSHELL
+Set-Location -LiteralPath 'D:\AIagent _openworld\gemini_world'
+.\CHAY.bat
+
+Hoặc chạy menu trực tiếp:
+python -B app/menu.py
+
+Muốn hiểu mã và cấu trúc: đọc docs/README.md và docs/NOTE_KET_NOI.txt.

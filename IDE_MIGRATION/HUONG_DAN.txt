@@ -1,0 +1,32 @@
+CHUYỂN DỮ LIỆU VS CODE VÀ CODEX SANG Ổ D
+
+Đích:
+  C:\Users\lenovo\.vscode  ->  D:\IDE\.vscode
+  C:\Users\lenovo\.codex   ->  D:\IDE\.codex
+
+Bản sao ban đầu đã được chuẩn bị. Để hoàn tất:
+1. Lưu các tệp đang chỉnh sửa.
+2. Đóng toàn bộ cửa sổ VS Code và Codex.
+3. Chờ bộ chuyển chạy. VS Code sẽ tự mở lại sau khi hoàn tất.
+   Nếu bạn mở VS Code sớm trong lúc kiểm tra, bộ chuyển sẽ chờ lại.
+
+Bộ chuyển chỉ xóa dữ liệu gốc sau khi kiểm tra SHA-256 thành công.
+Hai đường dẫn cũ trên ổ C sẽ trở thành liên kết thư mục sang ổ D.
+Giữ các liên kết này để ứng dụng tiếp tục dùng đường dẫn cũ.
+
+Trạng thái được lưu tại:
+  D:\AIagent _openworld\IDE_MIGRATION\status.json
+
+Stage = WaitingForAppsToClose: Đang chờ đóng ứng dụng.
+Stage = FinalCopy / Verifying / Switching: Đang chuyển, hãy chờ.
+Stage = CleaningVerifiedOriginals: Đang xóa bản gốc đã kiểm tra.
+Stage = Complete: Đã hoàn tất.
+Stage = NeedsAttention: Có lỗi; giữ nguyên các thư mục và nhờ kiểm tra nhật ký.
+
+Tác vụ Windows một lần:
+  Move-VSCode-Codex-Data-To-D-20261122
+Tác vụ tự xóa sau khi hoàn tất.
+
+Nhật ký sao chép nằm cùng thư mục này, tên:
+  .vscode-copy.log
+  .codex-copy.log
