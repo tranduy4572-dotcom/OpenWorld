@@ -1,0 +1,30 @@
+test_json_invalid_is_rejected (test_extension.GeminiWorldLabTests.test_json_invalid_is_rejected) ... ok
+test_model_output_cannot_grant_any_action (test_extension.GeminiWorldLabTests.test_model_output_cannot_grant_any_action) ... ok
+test_offline_brain_has_bounded_actions (test_extension.GeminiWorldLabTests.test_offline_brain_has_bounded_actions) ... ok
+test_valid_transfer_for_alice (test_extension.GeminiWorldLabTests.test_valid_transfer_for_alice) ... ok
+test_http_error_redacts_key (test_integration.AdapterTests.test_http_error_redacts_key) ... ok
+test_missing_key_does_not_call_network (test_integration.AdapterTests.test_missing_key_does_not_call_network) ... ok
+test_rest_request_and_json_response_without_network (test_integration.AdapterTests.test_rest_request_and_json_response_without_network) ... ok
+test_capability_is_issued_after_a_slow_model_response (test_integration.EndToEndTests.test_capability_is_issued_after_a_slow_model_response) ... ok
+test_hold_has_no_fabricated_feedback (test_integration.EndToEndTests.test_hold_has_no_fabricated_feedback) ... ok
+test_invalid_model_action_is_not_executed_or_trained (test_integration.EndToEndTests.test_invalid_model_action_is_not_executed_or_trained) ... ok
+test_mocked_gemini_proposals_follow_same_guarded_world_path (test_integration.EndToEndTests.test_mocked_gemini_proposals_follow_same_guarded_world_path) ... ok
+test_offline_reaches_goal_using_real_core_and_sqlite (test_integration.EndToEndTests.test_offline_reaches_goal_using_real_core_and_sqlite) ... ok
+test_resume_adds_only_new_events (test_integration.EndToEndTests.test_resume_adds_only_new_events) ... ok
+test_resume_refuses_world_memory_mismatch (test_integration.EndToEndTests.test_resume_refuses_world_memory_mismatch) ... ok
+test_ambiguous_layout_requires_explicit_selection (test_integration.RootResolutionTests.test_ambiguous_layout_requires_explicit_selection) ... ok
+test_config_selects_one_of_multiple_projects (test_integration.RootResolutionTests.test_config_selects_one_of_multiple_projects) ... ok
+test_environment_override_and_invalid_override (test_integration.RootResolutionTests.test_environment_override_and_invalid_override) ... ok
+test_installed_extension_uses_ancestor_core (test_integration.RootResolutionTests.test_installed_extension_uses_ancestor_core) ... ok
+test_invalid_config_does_not_silently_choose_other_core (test_integration.RootResolutionTests.test_invalid_config_does_not_silently_choose_other_core) ... ok
+test_sibling_layout_independent_of_working_directory (test_integration.RootResolutionTests.test_sibling_layout_independent_of_working_directory) ... ok
+test_connection_option_launches_the_actual_checker (test_menu.MenuTests.test_connection_option_launches_the_actual_checker) ... ok
+test_latest_report_requires_trace_and_uses_newest_report (test_menu.MenuTests.test_latest_report_requires_trace_and_uses_newest_report) ... ok
+test_menu_can_exit_from_an_unrelated_working_directory (test_menu.MenuTests.test_menu_can_exit_from_an_unrelated_working_directory) ... ok
+test_no_saved_report_is_handled (test_menu.MenuTests.test_no_saved_report_is_handled) ... ok
+test_unknown_option_returns_to_menu (test_menu.MenuTests.test_unknown_option_returns_to_menu) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 0.544s
+
+OK

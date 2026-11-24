@@ -1,0 +1,134 @@
+OPENWORLD CLEAN — ĐỌC TỪ ĐÂY
+Ngày cập nhật: 24/11/2026
+Nguồn mô tả chuẩn: ../../README.md
+
+1. BẢN CLEAN DÙNG ĐỂ LÀM GÌ?
+
+Đây là phần lõi được chọn từ OpenWorld-main để bạn dễ học và chạy thử.
+Nó giữ thế giới mô phỏng, hành động, kiểm tra quyền và bộ nhớ SQLite.
+Code Python được giữ nguyên từ dự án gốc; chỉ chọn lại những file cần dùng.
+Các benchmark, nghiên cứu toán, ví dụ phụ và công cụ quản lý dự án vẫn nằm
+ở OpenWorld-main. Chúng đã được bỏ khỏi bản Clean.
+
+2. CHẠY THẾ NÀO?
+
+Nhấp đúp CHAY.bat ở thư mục OpenWorld_Clean để xem một lượt mô phỏng.
+Hoặc mở terminal tại OpenWorld_Clean và nhập:
+
+    python -B examples/r0_agent_cycle.py
+
+Cần Python từ 3.11 trở lên. Ví dụ này dùng thư viện có sẵn của Python,
+không cần API key. Gemini vẫn nằm riêng trong thư mục gemini_world.
+
+3. NHÌN KẾT QUẢ NÀO TRƯỚC?
+
+Hãy tìm phần "cycles" trong kết quả. Có ba lượt, mỗi lượt là một lần
+quan sát -> đọc bộ nhớ -> chọn hành động -> kiểm tra quyền -> thực hiện
+-> lưu phản hồi mô phỏng -> kiểm tra phát lại.
+
+Trong ví dụ này:
+  - Ban đầu Alice có 3 tài nguyên, Bob có 3.
+  - Lượt 1: dự đoán 0.5 -> Alice chuyển 1 tài nguyên cho Bob.
+  - Phản hồi giả lập được đưa vào bộ nhớ là 0.
+  - Lượt 2: dự đoán khoảng 0.3333 -> Alice gửi tín hiệu, không chuyển xu.
+  - Phản hồi giả lập tiếp theo là 1.
+  - Lượt 3: dự đoán 0.5 -> Alice chuyển thêm 1 tài nguyên cho Bob.
+  - Phản hồi giả lập cuối cùng là 1.
+  - "final_balances": Alice còn 1, Bob có 5.
+  - "world_replay": "PASS" nghĩa là phát lại cho ra đúng trạng thái đó.
+
+Dãy (0, 1, 1) do người viết ví dụ đặt sẵn làm phản hồi thử nghiệm.
+Nó không phải số xu, câu trả lời của Bob hay kết quả gọi một mô hình AI.
+Hành động "signal" là sự kiện trong thế giới mô phỏng. Ở ví dụ này nó
+không tự tạo một cuộc hội thoại hay khiến Bob tự tiếp quản công việc.
+
+4. ĐỌC FILE THEO THỨ TỰ NÀO?
+
+Thư mục src/openworld_superkernel chứa đúng 8 file lõi sau:
+
+  (1) world_fixture.py
+      Tạo thế giới, nhân vật, hàng xóm, tài nguyên; áp dụng hành động
+      và phát lại lịch sử để kiểm tra. Hãy hình dung đây là luật chơi.
+
+  (2) r0_cycle.py
+      Ghép các bước thành một lượt hoạt động. Điều kiện chọn hành động
+      nằm ở đây: dự đoán >= 0.5 và còn ít nhất 1 xu thì chuyển 1 xu;
+      nếu không thì gửi tín hiệu, với chính sách mặc định.
+
+  (3) hyper_memory_p1e.py
+      Lưu và đọc bộ nhớ bằng SQLite, cập nhật thống kê từ phản hồi 0/1,
+      rồi tính dự đoán dùng cho lượt sau.
+      Bảng agent_state chứa trạng thái thống kê của từng agent;
+      bảng exact_events chứa sự kiện cùng nội dung và nguồn gốc của nó.
+
+  (4) memory_contracts.py
+      Định nghĩa một sự kiện bộ nhớ gồm những gì và cách phân loại dữ
+      liệu: quan sát, suy luận hay mô phỏng; khi nào giữ bản ghi nguyên vẹn.
+
+  (5) world_guard.py
+      Kiểm tra quyền trước khi cho quan sát hoặc thao tác thế giới.
+
+  (6) trust_boundaries.py
+      Tạo và xác minh giấy phép có chữ ký, thời hạn và phạm vi quyền.
+      world_guard.py dùng phần này để kiểm tra giấy phép được đưa vào.
+
+  (7) world_persistence.py
+      Có hàm lưu và nạp checkpoint của thế giới bằng SQLite, phục vụ
+      việc giữ trạng thái qua các lần chạy. Ví dụ R0 chưa gọi phần này;
+      phần kết nối Gemini có sử dụng nó.
+
+  (8) __init__.py
+      Điểm khởi đầu của gói Python, xuất một số kiểu dữ liệu bộ nhớ.
+      Bạn có thể đọc sau cùng.
+
+Hai file Python còn lại:
+
+  examples/r0_agent_cycle.py
+      Nơi chạy thử: tạo nhân vật, cấp quyền, tạo bộ nhớ rồi gọi ba lượt.
+      Đọc file này trước khi đi sâu vào 8 file lõi để thấy chúng nối nhau.
+
+  tests/test_r0_agent_cycle.py
+      Kiểm tra cả lượt chạy đúng lẫn trường hợp phải bị từ chối:
+      sai quyền, sai chủ sở hữu, dữ liệu không hợp lệ, lịch sử bị sửa...
+      Không cần đọc hết file test để bắt đầu hiểu mô phỏng.
+
+Các file ở ngoài:
+  CHAY.bat        : chạy ví dụ bằng nhấp đúp trên Windows.
+  README.md       : mô tả và lệnh chạy bằng tiếng Anh.
+  AGENTS.md       : hướng dẫn cho trợ lý lập trình khi sửa bản Clean.
+  pyproject.toml  : thông tin gói Python và phiên bản Python cần dùng.
+  LICENSE         : giấy phép của dự án.
+  .gitignore      : danh sách file Git không cần theo dõi, như cache.
+  File bạn đang đọc: ghi chú học và bản đồ các file.
+
+5. SQLITE CỦA VÍ DỤ NẰM Ở ĐÂU?
+
+Thế giới của ví dụ nằm trong RAM. Bộ nhớ nằm trong lab-memory.sqlite3
+ở một thư mục tạm của hệ điều hành, được tạo khi chạy ví dụ.
+Khi ví dụ kết thúc bình thường, thư mục tạm và SQLite đó được dọn đi.
+Vì vậy bản Clean chưa có sẵn một file SQLite cố định để bạn mở xem.
+Hàm lưu thế giới và bộ nhớ là hai phần riêng, chưa phải một giao dịch
+chung bảo đảm cả hai luôn được lưu đồng thời.
+
+6. BẠN CÓ THỂ THAO TÁC GÌ NGAY?
+
+  - Chạy CHAY.bat và đối chiếu ba lượt với phần 3 của ghi chú này.
+  - Đọc examples/r0_agent_cycle.py để tìm số xu ban đầu và dãy (0, 1, 1).
+  - Đọc r0_cycle.py để tìm điều kiện chuyển xu hoặc gửi tín hiệu.
+  - Chạy kiểm tra có sẵn từ thư mục OpenWorld_Clean:
+
+        python -B -m unittest discover -s tests -v
+
+Ví dụ này chưa có giao diện thế giới 2D hoặc cuộc trò chuyện với LLM.
+Đây là phần lõi mô phỏng để hiểu trước khi nối thêm các khả năng đó.
+
+7. KẾT QUẢ KIỂM TRA SAU KHI RÚT GỌN — 24/11/2026
+
+  - Còn 17 file, trong đó có 8 module lõi Python.
+  - Ví dụ và CHAY.bat chạy được, phát lại PASS, kết quả Alice=1, Bob=5.
+  - Chạy 12 bài test có sẵn: tất cả đều đạt.
+  - Kiểm tra kết nối Gemini: nạp đúng module của bản Clean và tạo được world.
+    Chưa dùng phép kiểm tra này để gọi Gemini API thật.
+  - Đối chiếu SHA-256: toàn bộ 178 file của OpenWorld-main không đổi;
+    13 file được giữ nguyên ở bản Clean giống hệt bản gốc.
+  - Nhật ký test và lệnh tái hiện nằm trong ../../README.md.

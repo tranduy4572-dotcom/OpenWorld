@@ -1,0 +1,78 @@
+GHI CHÚ KẾT NỐI VÀ CẤU TRÚC ĐÃ LÀM GỌN
+Cập nhật: 23/11/2026
+
+CÁCH MỞ DUY NHẤT
+Mở CHAY.bat ở thư mục gemini_world, chọn số trong menu.
+1 Gemini thật; 2 offline; 3 xem model; 4 kiểm tra core; 5 tests;
+6 mở báo cáo mới nhất; 0 thoát.
+
+CÁC FILE .BAT CŨ ĐƯỢC GỘP THẾ NÀO?
+CHAY_GEMINI.bat       -> menu 1
+CHAY_OFFLINE.bat      -> menu 2
+XEM_MODELS.bat        -> menu 3
+KIEM_TRA_DU_AN.bat    -> menu 4
+CHAY_TEST.bat         -> menu 5
+Không cần giữ năm launcher riêng vì chúng gọi các tác vụ có sẵn.
+
+KẾT NỐI HIỆN TẠI
+Core: D:\AIagent _openworld\OpenWorld-main
+Cấu hình chọn core: gemini_world/openworld_config.json
+Key/model: gemini_world/.env
+Đường dẫn hai file cấu hình trên không đổi sau khi làm gọn.
+
+CẤU TRÚC MỚI
+app/: agent_lab.py, gemini_api.py, openworld_bridge.py, list_models.py,
+      verify_integration.py, report.py, viewer_template.html, menu.py.
+tests/: các bài kiểm tra extension và menu.
+docs/: giải thích kết nối và mục tiêu.
+docs/kiem_tra/: báo cáo, dấu SHA-256 core và log kiểm tra.
+runs/: toàn bộ thế giới, bộ nhớ và lịch sử đã chạy.
+
+Các lệnh cũ dạng python agent_lab.py được thay bằng python app/agent_lab.py.
+Tốt nhất dùng menu để không phải nhớ đường dẫn.
+
+VÌ SAO TRƯỚC ĐÂY KHÔNG KẾT NỐI ĐƯỢC?
+- Extension giả định nó nằm trong OpenWorld_Clean/extensions, trong khi
+  thực tế gemini_world và OpenWorld-main nằm cạnh nhau; do đó tìm nhầm D:\src.
+- Thời hạn quyền cũ thành 3.610 giây, vượt mức tối đa 3.600 giây của core.
+Đã sửa bộ tìm đường dẫn và cấp quyền ngắn hạn ngay trước thao tác. Không
+cần chép hoặc sửa core để giải quyết hai lỗi này.
+
+NGUỒN QUYẾT ĐỊNH
+OFFLINE_RULES: luật cục bộ, không gọi API.
+MOCK_GEMINI_API: phản hồi giả lập trong test, không phải Gemini trả lời thật.
+GEMINI_API: đề xuất lấy từ adapter gọi dịch vụ Gemini khi chạy chế độ thật.
+Chỉ việc cài key hoặc liệt kê model chưa chứng minh sinh nội dung thành công.
+
+MỤC TIÊU DEMO
+Bob cần 2 tài nguyên mô phỏng; Alice ban đầu 3, Bob 0.
+Bob có thể signal/hold; Alice có thể transfer 1, signal hoặc hold.
+Host quan sát -> đọc HyperMemory -> lấy đề xuất -> kiểm tra -> xác nhận ->
+cổng quyền W3 -> thay đổi thế giới -> lưu bộ nhớ, checkpoint và trace.
+
+Phản hồi tính từ luật mục tiêu, không dùng chuỗi cố định 0,1,1 của R0:
+- Alice nhận 1 khi chuyển làm Bob tăng đúng 1 lúc Bob còn thiếu.
+- Bob nhận 1 khi signal lúc Bob còn thiếu.
+- Hold không tạo phản hồi cập nhật dự đoán.
+Đây vẫn là phản hồi mô phỏng, không huấn luyện lại trọng số Gemini.
+
+BÁO CÁO VÀ LƯU TRỮ
+Menu 6 mở XEM_DU_LIEU.html mới nhất có trace.jsonl tương ứng dưới runs/.
+Bản sao XEM_KET_QUA_OFFLINE.html từng nằm ở gốc chỉ là bản xuất trùng của
+báo cáo trong runs/. Bỏ bản trùng không làm mất dữ liệu gốc.
+world.sqlite3 giữ checkpoint W3; memory.sqlite3 giữ agent_state/exact_events.
+Hai SQLite không có giao dịch nguyên tử chung. Cần kiểm tra dữ liệu lệch
+nếu ngắt chương trình giữa các lần ghi; không tự đoán lại lịch sử.
+
+BẰNG CHỨNG
+kiem_tra/KET_QUA_KIEM_TRA.json: kiểm tra kết nối trước khi tổ chức lại.
+kiem_tra/cleanup-tests.log: đầu ra test sau khi tổ chức lại.
+kiem_tra/SAU_KHI_LAM_GON.json: kết quả kiểm tra cấu trúc mới.
+Thư mục runs giữ nguyên các kết quả thực thi trước đó. Các đường dẫn file
+trong trace cũ mô tả vị trí ở thời điểm chạy cũ; trace mới dùng đường dẫn app/.
+
+KHÓA API
+Đọc BAT_DAU.txt ở thư mục cha. Chỉ điền key vào .env cục bộ.
+Tài liệu Google đã đối chiếu khi nối adapter:
+https://ai.google.dev/api/generate-content
+https://ai.google.dev/gemini-api/docs/structured-output
